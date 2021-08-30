@@ -4,31 +4,19 @@
 @section('title',$header)
 
 @section('custom-css-script')
-<!-- Ionicons -->
 <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-<!-- Tempusdominus Bootstrap 4 -->
 <link rel="stylesheet" href="{{ asset('plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
-<!-- iCheck -->
 <link rel="stylesheet" href="{{ asset('plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
-<!-- JQVMap -->
 <link rel="stylesheet" href="{{ asset('plugins/jqvmap/jqvmap.min.css') }}">
-<!-- Theme style -->
 <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css') }}">
-<!-- overlayScrollbars -->
 <link rel="stylesheet" href="{{ asset('plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
-<!-- Daterange picker -->
 <link rel="stylesheet" href="{{ asset('plugins/daterangepicker/daterangepicker.css') }}">
-<!-- summernote -->
 <link rel="stylesheet" href="{{ asset('plugins/summernote/summernote-bs4.min.css') }}">
 @endsection
 
 @section('custom-css')
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Pattaya&display=swap');
-
-    body {
-        font-family: 'Pattaya', sans-serif;
-    }
 </style>
 @endsection
 
@@ -121,12 +109,31 @@
             <div class="row">
 
                 <div class="col-lg-6 col-md-6 col-sm-12">
-                    <div id="chartContainer" style="height: 370px; width: 100%;"></div>
+                    <div class="form-group boarder shadow">
+                        <div id="chartContainer1" style="height: 370px; width: 100%;"></div>
+                    </div>
                 </div>
+
                 <div class="col-lg-6 col-md-6 col-sm-12">
-                    <div id="chartContainer2" style="height: 370px; width: 100%;"></div>
+                    <div class="form-group boarder shadow">
+                        <div id="chartContainer2" style="height: 370px; width: 100%;"></div>
+                    </div>
                 </div>
+
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                    <div class="form-group boarder shadow">
+                        <div id="chartContainer3" style="height: 370px; width: 100%;"></div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                    <div class="form-group boarder shadow">
+                        <div id="chartContainer4" style="height: 370px; width: 100%;"></div>
+                    </div>
+                </div>
+
             </div>
+
 
 
         </div><!-- /.container-fluid -->
@@ -136,32 +143,19 @@
 @endsection
 
 @section('custom-js-script')
-<!-- jQuery -->
 <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
-<!-- jQuery UI 1.11.4 -->
 <script src="{{ asset('plugins/jquery-ui/jquery-ui.min.js') }}"></script>
-<!-- ChartJS -->
 <script src="{{ asset('plugins/chart.js/Chart.min.js') }}"></script>
-<!-- Sparkline -->
 <script src="{{ asset('plugins/sparklines/sparkline.js') }}"></script>
-<!-- JQVMap -->
 <script src="{{ asset('plugins/jqvmap/jquery.vmap.min.js') }}"></script>
 <script src="{{ asset('plugins/jqvmap/maps/jquery.vmap.usa.js') }}"></script>
-<!-- jQuery Knob Chart -->
 <script src="{{ asset('plugins/jquery-knob/jquery.knob.min.js') }}"></script>
-<!-- daterangepicker -->
 <script src="{{ asset('plugins/moment/moment.min.js') }}"></script>
 <script src="{{ asset('plugins/daterangepicker/daterangepicker.js') }}"></script>
-<!-- Tempusdominus Bootstrap 4 -->
 <script src="{{ asset('plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"></script>
-<!-- Summernote -->
 <script src="{{ asset('plugins/summernote/summernote-bs4.min.js') }}"></script>
-<!-- overlayScrollbars -->
 <script src="{{ asset('plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
-
-<!-- AdminLTE for demo purposes -->
 <script src="{{ asset('dist/js/demo.js') }}"></script>
-<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="{{ asset('dist/js/pages/dashboard.js') }}"></script>
 <script>
     $.widget.bridge('uibutton', $.ui.button)
@@ -173,87 +167,37 @@
 <script>
     window.onload = function() {
 
-        var chart = new CanvasJS.Chart("chartContainer", {
+        var chart1 = new CanvasJS.Chart("chartContainer1", {
             animationEnabled: true,
             exportEnabled: true,
             theme: "light1", // "light1", "light2", "dark1", "dark2"
+            fontFamily: "Pattaya",
             title: {
-                text: "Simple Column Chart with Index Labels"
+                text: "ผู้ป่วย Covid-19 แยกตามจังหวัด",
+                fontFamily: "Pattaya",
             },
             axisY: {
                 includeZero: true
             },
+
             data: [{
-                type: "column", //change type to bar, line, area, pie, etc
+                type: "line", //change type to bar, line, area, pie, etc
                 //indexLabel: "{y}", //Shows y value on all Data Points
                 indexLabelFontColor: "#5A5757",
                 indexLabelFontSize: 16,
                 indexLabelPlacement: "outside",
-                dataPoints: [{
-                        x: 10,
-                        y: 71
-                    },
-                    {
-                        x: 20,
-                        y: 55
-                    },
-                    {
-                        x: 30,
-                        y: 50
-                    },
-                    {
-                        x: 40,
-                        y: 65
-                    },
-                    {
-                        x: 50,
-                        y: 92,
-                        indexLabel: "\u2605 Highest"
-                    },
-                    {
-                        x: 60,
-                        y: 68
-                    },
-                    {
-                        x: 70,
-                        y: 38
-                    },
-                    {
-                        x: 80,
-                        y: 71
-                    },
-                    {
-                        x: 90,
-                        y: 54
-                    },
-                    {
-                        x: 100,
-                        y: 60
-                    },
-                    {
-                        x: 110,
-                        y: 36
-                    },
-                    {
-                        x: 120,
-                        y: 49
-                    },
-                    {
-                        x: 130,
-                        y: 21,
-                        indexLabel: "\u2691 Lowest"
-                    }
-                ]
+                dataPoints: <?php echo json_encode($dataPoints1, JSON_NUMERIC_CHECK); ?>
             }]
         });
-        chart.render();
+        chart1.render();
 
         var chart2 = new CanvasJS.Chart("chartContainer2", {
             theme: "light2", // "light1", "light2", "dark1", "dark2"
             exportEnabled: true,
             animationEnabled: true,
             title: {
-                text: "Desktop Browser Market Share in 2016"
+                text: "ผู้ป่วย Covid-19 แยกตามเพศ",
+                fontFamily: "Pattaya",
             },
             data: [{
                 type: "pie",
@@ -263,38 +207,57 @@
                 legendText: "{label}",
                 indexLabelFontSize: 16,
                 indexLabel: "{label} - {y}%",
-                dataPoints: [{
-                        y: 51.08,
-                        label: "Chrome"
-                    },
-                    {
-                        y: 27.34,
-                        label: "Internet Explorer"
-                    },
-                    {
-                        y: 10.62,
-                        label: "Firefox"
-                    },
-                    {
-                        y: 5.02,
-                        label: "Microsoft Edge"
-                    },
-                    {
-                        y: 4.07,
-                        label: "Safari"
-                    },
-                    {
-                        y: 1.22,
-                        label: "Opera"
-                    },
-                    {
-                        y: 0.44,
-                        label: "Others"
-                    }
-                ]
+                dataPoints: <?php echo json_encode($dataPoints2, JSON_NUMERIC_CHECK); ?>
             }]
         });
         chart2.render();
+
+        var chart3 = new CanvasJS.Chart("chartContainer3", {
+            theme: "light2", // "light1", "light2", "dark1", "dark2"
+            exportEnabled: true,
+            animationEnabled: true,
+            fontFamily: "Pattaya",
+            title: {
+                text: "ผู้ป่วย Covid-19 แยกตามจังหวัด",
+                fontFamily: "Pattaya",
+            },
+            axisY: {
+                includeZero: true,
+            },
+            data: [{
+                color: "LightSeaGreen",
+                type: "bar",
+                // startAngle: 25,
+                toolTipContent: "<b>{label}</b>: {y}%",
+                // showInLegend: "true",
+                // legendText: "{label}",
+                indexLabelFontSize: 16,
+                // indexLabel: "{label} - {y}%",
+                dataPoints: <?php echo json_encode($dataPoints3, JSON_NUMERIC_CHECK); ?>
+            }]
+        });
+        chart3.render();
+
+        var chart4 = new CanvasJS.Chart("chartContainer4", {
+            theme: "light2", // "light1", "light2", "dark1", "dark2"
+            exportEnabled: true,
+            animationEnabled: true,
+            title: {
+                text: "จำนวนการเรียกใช้ API 14 วันย้อนหลัง",
+                fontFamily: "Pattaya",
+            },
+            data: [{
+                type: "area",
+                startAngle: 25,
+                toolTipContent: "<b>{label}</b>: {y}%",
+                showInLegend: "true",
+                legendText: "{label}",
+                indexLabelFontSize: 16,
+                // indexLabel: "{label} - {y}%",
+                dataPoints: <?php echo json_encode($dataPoints4, JSON_NUMERIC_CHECK); ?>
+            }]
+        });
+        chart4.render();
 
     }
 </script>

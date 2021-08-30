@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Province;
 use Illuminate\Support\Facades\log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
 
 class UserController extends Controller
 {
@@ -81,7 +83,55 @@ class UserController extends Controller
     // Dashboard -----------------------------------------------------------------------------------
     public function dashboard()
     {
-        return view('dashboard');
+        $dataPoints = array(
+            array("y" => 25, "label" => "Sunday"),
+            array("y" => 15, "label" => "Monday"),
+            array("y" => 25, "label" => "Tuesday"),
+            array("y" => 5, "label" => "Wednesday"),
+            array("y" => 10, "label" => "Thursday"),
+            array("y" => 0, "label" => "Friday"),
+            array("y" => 20, "label" => "Saturday")
+        );
+
+        // Cache province ------------------------------------------------------------------------------------
+        $datas1 = Cache::remember('count_province', '60', function () {
+            return  DB::table('today-cases-line-lists')->selectRaw('count(txn_date) as totals,province')->GroupBy('province')->Orderby('totals', 'desc')->limit(10)->get();
+        });
+        foreach ($datas1 as $data1) {
+            $dataPoints1[] = array("y" => $data1->totals, "label" => $data1->province);
+        }
+
+        // Cache Gender ------------------------------------------------------------------------------------
+        $datas2 = Cache::remember('datas2', '60', function () {
+            return  DB::table('today-cases-line-lists')->selectRaw('count(txn_date) as totals,gender')->GroupBy('gender')->get();
+        });
+        foreach ($datas2 as $data2) {
+            $dataPoints2[] = array("y" => $data2->totals, "label" => $data2->gender);
+        }
+
+        // Cache Risk ------------------------------------------------------------------------------------
+        $datas3 = Cache::remember('datas3', '60', function () {
+            return  DB::table('today-cases-line-lists')->selectRaw('count(txn_date) as totals,risk')->GroupBy('risk')->orderByDesc('totals')->limit(5)->get();
+        });
+        foreach ($datas3 as $data3) {
+            $dataPoints3[] = array("y" => $data3->totals, "label" => $data3->risk);
+        }
+
+        // API ------------------------------------------------------------------------------------
+        $response = Http::get('https://covid19.ddc.moph.go.th/api/Usage-Stats-Count');
+        $datas4 = json_decode($response->body());
+        foreach ($datas4 as $data4) {
+            $dataPoints4[] = array("y" => $data4->totals, "label" => $data4->date_req);
+        }
+
+        //dd($dataPoints4);
+
+        return view('dashboard', [
+            "dataPoints1" => $dataPoints1,
+            "dataPoints2" => $dataPoints2,
+            "dataPoints3" => $dataPoints3,
+            "dataPoints4" => $dataPoints4,
+        ]);
     }
 
 
@@ -97,6 +147,8 @@ class UserController extends Controller
             'name' => 'required',
             'file' => 'mimes:doc,docx,xls,xlsx,pdf|max:2048'
         ]);
+
+        
         return back()->withInput()->with('Success', 'Upload Successfully');
     }
 
@@ -123,5 +175,12 @@ class UserController extends Controller
     public function form_relate_insert(Request $request)
     {
         return back()->withInput()->with('Success', 'Insert Successfully');
+    }
+
+
+    // Contact Us -----------------------------------------------------S------------------------------
+    public function contact()
+    {
+        return view('contact');
     }
 }

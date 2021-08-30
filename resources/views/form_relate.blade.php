@@ -64,8 +64,8 @@
                         <input type="text" name="name" class="form-control" placeholder="ชื่อ-นามสกุล">
                     </div>
                     <div class="form-group">
-                        <label for="">ที่อยู่</label>
-                        <input type="text" name="address" class="form-control" placeholder="ที่อยู่">
+                        <label for="">หน่วยงาน</label>
+                        <input type="text" name="organize" class="form-control" placeholder="ที่อยู่">
                     </div>
                     <div class="form-group">
                         <label for="">จังหวัด</label>
@@ -96,6 +96,44 @@
                 </form>
 
             </div>
+    </section>
+
+
+    <section class="content">
+        <div class="card card-outline card-info">
+            <!-- <div class="card-header">รายละเอียด</div> -->
+            <div class="card-body">
+
+                <table id="example1" class="table table-striped table-sm">
+                    <thead class="bg-gradient-gray">
+                        <tr>
+                            <th>id</th>
+                            <th>ชื่อ-นามสกุล</th>
+                            <th>หน่วยงาน</th>
+                            <th>ตำบล</th>
+                            <th>ดำเภอ</th>
+                            <th>จังหวัด</th>
+                            <th>รหัสไปรษณีย์</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+
+            </div>
+        </div>
     </section>
 </div>
 
@@ -136,5 +174,9 @@
             "responsive": true,
         });
     });
+
+    $(function() {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
 </script>
 @endsection

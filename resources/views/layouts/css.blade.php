@@ -10,12 +10,10 @@
   <link rel="stylesheet" href="{{ asset('plugins/pace-progress/themes/blue/pace-theme-flat-top.css') }}">
 
 
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Pattaya&display=swap');
 
-    body{
-      font-family: 'Pattaya', sans-serif;
-    }
-  </style>
-
-
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@500&display=swap');
+body{
+  font-family: 'Sarabun', sans-serif;
+}
+</style>

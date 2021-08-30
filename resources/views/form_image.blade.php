@@ -65,12 +65,19 @@
                         <label for="">Name</label>
                         <input type="text" name="name" class="form-control">
                     </div>
+       
+
                     <div class="form-group">
                         <label for="">Image</label>
-                        <input type="file" name="file" class="form-control" accept=".jpg,.png,.gif,.jpeg">
+                        <div class="custom-file">
+                            <input type="file" id="customFile" name="file" class="custom-file-input"  accept=".jpg,.png,.gif,.jpeg">
+                            <label class="custom-file-label" for="customFile">Choose file</label>
+                        </div>
                     </div>
 
+
                     <div class="text-right">
+                        <button type="reset" class="btn btn-danger" style="width: 100px;">reset</button>
                         <button type="submit" class="btn btn-success" style="width: 100px;">save</button>
                     </div>
                 </form>
@@ -97,8 +104,9 @@
                             <td></td>
                             <td></td>
                             <td class="text-nowrap">
-                                <a href="" class="btn btn-sm btn-info" data-toggle="tooltip" title="Download"><i class="fas fa-download mr-2"></i>Public</a>
-                                <a href="" class="btn btn-sm btn-primary" data-toggle="tooltip" title="Download"><i class="fas fa-download mr-2"></i>Storage</a>
+                                <a href="" class="btn btn-sm btn-info" data-toggle="tooltip" title="Public"><i class="fas fa-download"></i></a>
+                                <a href="" class="btn btn-sm btn-primary" data-toggle="tooltip" title="Stroage"><i class="fas fa-download"></i></a>
+                                <a href="" class="btn btn-sm btn-danger" data-toggle="tooltip" title="Delete"><i class="fas fa-trash-alt"></i></a>
                             </td>
                         </tr>
 
@@ -127,6 +135,9 @@
 <script src="{{ asset('plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
+<!-- bs-custom-file-input -->
+<script src="{{ asset('plugins/bs-custom-file-input/bs-custom-file-input.min.js') }}""></script>
+
 @endsection
 
 @section('custom-js')
@@ -138,15 +149,16 @@
             "autoWidth": false,
             "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
         }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-        $('#example2').DataTable({
-            "paging": true,
-            "lengthChange": false,
-            "searching": false,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false,
-            "responsive": true,
-        });
     });
+
+    $(function() {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+</script>
+
+<script>
+$(function () {
+  bsCustomFileInput.init();
+});
 </script>
 @endsection

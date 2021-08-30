@@ -14,7 +14,7 @@
         <a href="{{ url('/') }}" class="nav-link">Home</a>
       </li>
       <li class="nav-item d-none d-sm-inline-block">
-        <a href="#" class="nav-link">Contact</a>
+        <a href="{{ route('contact') }}" class="nav-link">Contact</a>
       </li>
     </ul>
 
@@ -53,8 +53,8 @@
           </li>
           <!-- Menu Footer-->
           <li class="user-footer">
-            <a href="#" class="btn btn-default btn-flat">Profile</a>
-            <a href="{{ route('logout') }}" class="btn btn-default btn-flat float-right" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Sign out</a>
+            <a href="#" class="btn btn-outline-info rounded-pill btn-flat">Profile</a>
+            <a href="{{ route('logout') }}" class="btn btn-outline-danger rounded-pill btn-flat float-right" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Sign out</a>
           </li>
         </ul>
       </li>

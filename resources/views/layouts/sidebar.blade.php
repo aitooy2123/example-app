@@ -22,7 +22,7 @@
      <!-- nav nav-pills nav-sidebar nav-compact nav-legacy flex-column nav-child-indent nav-collapse-hide-child -->
      <!-- Sidebar Menu -->
      <nav class="mt-2 ">
-       <ul class="nav nav-pills nav-sidebar flex-column  nav-compact nav-legacy nav-child-indent " data-widget="treeview" role="menu" data-accordion="false">
+       <ul class="nav nav-pills nav-sidebar flex-column  nav-compact nav-legacy nav-child-indent nav-collapse-hide-child" data-widget="treeview" role="menu" data-accordion="false">
          <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
 

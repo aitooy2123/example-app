@@ -36,7 +36,10 @@ Route::group(['middleware' => ['auth']], function () {
     route::get('table/edit/{id}', [UserController::class, 'table_edit'])->name('table_edit');
     route::post('table/update', [UserController::class, 'table_update'])->name('table_update');
     route::get('table/delete/{id}', [UserController::class, 'table_delete'])->name('table_delete');
-    
+
+    // Contact Us =========================================================
+    route::get('contact', [UserController::class, 'contact'])->name('contact');
+
     // Dashboard =========================================================
     route::get('dashboard', [UserController::class, 'dashboard'])->name('dashboard');
 

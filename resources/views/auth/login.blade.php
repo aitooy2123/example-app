@@ -15,7 +15,7 @@
 
     <style>
         body {
-            background-image: url('http://cdn29.us1.fansshare.com/images/wallpaperbackground/blue-vintage-background-wallpaper-hd-1600043769.jpg');
+            background-image: url('{{ asset('images/Laravel_onlineWorkshop.jpeg') }}');
             background-repeat: no-repeat;
             background-size: 100% 100%;
         }
@@ -25,7 +25,7 @@
 
 <body class="hold-transition login-page">
 
-    <div class="login-box">
+    <div class="login-box shadow">
         <!-- <div class="login-logo">
       <img src="{{ asset('graphic/Main/PNG/img_login_logo.png') }}" width="250">
     </div> -->
