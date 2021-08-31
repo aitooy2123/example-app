@@ -9,6 +9,9 @@
   <!-- pace-progress -->
   <link rel="stylesheet" href="{{ asset('plugins/pace-progress/themes/blue/pace-theme-flat-top.css') }}">
 
+  <link rel="stylesheet" href="{{ asset('plugins/toastr/toastr.min.css') }}">
+
+
 
 
 <style>

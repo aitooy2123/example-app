@@ -64,11 +64,11 @@
                     @csrf
                     <div class="form-group">
                         <label for="">Name</label>
-                        <input type="text" name="name" class="form-control" value="{{ old('name') }}">
+                        <input type="text" name="name" class="form-control" value="{{ old('name') }}" required>
                     </div>
 
                     <div class="form-group">
-                        <label for="">File</label>
+                        <label for="">File</label> (<span class="text-red text-bold">doc,docx,xls,xlsx,pdf ไม่เกิน 2MB</span>)
                         <div class="custom-file">
                             <input type="file" id="customFile" name="file" class="custom-file-input" value="{{ old('file') }}" accept=".doc,.docx,.xls,.xlsx,.pdf">
                             <label class="custom-file-label" for="customFile">Choose file</label>
@@ -100,15 +100,25 @@
                     </thead>
                     <tbody>
 
+                        @foreach($file as $val)
                         <tr>
-                            <td></td>
-                            <td></td>
+                            <td>{{ $val->id }}</td>
+                            <td>{{ $val->file_name }}</td>
                             <td class="text-nowrap">
-                                <a href="" class="btn btn-sm btn-info" data-toggle="tooltip" title="Public"><i class="fas fa-download"></i></a>
-                                <a href="" class="btn btn-sm btn-primary" data-toggle="tooltip" title="Stroage"><i class="fas fa-download"></i></a>
-                                <a href="" class="btn btn-sm btn-danger" data-toggle="tooltip" title="Delete"><i class="fas fa-trash-alt"></i></a>
+                                <a href="{{ asset('uploads/'.$val->file_path1 ) }}" class="btn btn-sm btn-info" data-toggle="tooltip" title="Public"><i class="fas fa-download"></i></a>
+                                <a href="{{ route('form.upload_download',['id'=>$val->id]) }}" class="btn btn-sm btn-primary" data-toggle="tooltip" title="Stroage"><i class="fas fa-download"></i></a>
+
+                                <form action="{{ route('form.upload_delete') }}" method="POST" class="d-inline">
+                                    @csrf
+                                    <input type="hidden" name="id" value="{{ $val->id }}">
+                                    <input type="hidden" name="path1" value="{{ $val->file_path1 }}">
+                                    <input type="hidden" name="path2" value="{{ $val->file_path2 }}">
+                                    <button type="submit" class="btn btn-sm btn-danger" data-toggle="tooltip" title="Delete"><i class="fas fa-trash-alt"></i></button>
+                                </form>
+
                             </td>
                         </tr>
+                        @endforeach
 
                     </tbody>
                 </table>
@@ -145,22 +155,10 @@
 @section('custom-js')
 <script>
     $(function() {
-        $("#example1").DataTable({
-            "responsive": true,
-            "lengthChange": false,
-            "autoWidth": false,
-            "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-    });
-
-    $(function() {
-        $('[data-toggle="tooltip"]').tooltip()
-    })
-</script>
-
-<script>
-$(function () {
-  bsCustomFileInput.init();
-});
+        $(" #example1").DataTable({ "responsive" : true, "lengthChange" : false, "autoWidth" : false, "buttons" : ["copy", "csv" , "excel" , "pdf" , "print" , "colvis" ] }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)'); }); $(function() { $('[data-toggle="tooltip" ]').tooltip() }) </script>
+    < script >
+        $(function() {
+            bsCustomFileInput.init();
+        });
 </script>
 @endsection

@@ -14,12 +14,6 @@
 
 <body class="hold-transition sidebar-mini layout-fixed ">
     <div class="wrapper">
-
-        <!-- Preloader -->
-        <!-- <div class="preloader flex-column justify-content-center align-items-center">
-            <img class="animation__wobble" src="{{ asset('images/img_logo_login.png') }}" alt="DDC LOGO" height="150" width="150">
-        </div> -->
-
         @include('layouts.navbar')
         @include('layouts.sidebar')
         @yield('content')

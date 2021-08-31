@@ -22,6 +22,15 @@ Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 Route::get('home', function () {
     return view('home2');
 });
+
+Route::get('/clear-cache', function() {
+    Artisan::call('view:clear');
+    Artisan::call('cache:clear');
+    Artisan::call('config:clear');
+    Artisan::call('route:clear');
+    return back()->with('Clear','Clear Cache แล้ว');
+});
+
 // --------------------------------------------------------------------------------------
 
 Route::group(['middleware' => ['auth']], function () {
@@ -46,10 +55,14 @@ Route::group(['middleware' => ['auth']], function () {
     // Upload File =========================================================
     route::get('form/upload', [UserController::class, 'form_upload'])->name('form.upload');
     route::post('form/upload/insert', [UserController::class, 'form_upload_insert'])->name('form.upload_insert');
+    route::get('form/upload/download/{id}',[UserController::class, 'form_upload_download'])->name('form.upload_download');
+    route::post('form/upload/delete',[UserController::class, 'form_upload_delete'])->name('form.upload_delete');
 
     // Upload Image =========================================================
     route::get('form/image', [UserController::class, 'form_image'])->name('form.image');
     route::post('form/image/insert', [UserController::class, 'form_image_insert'])->name('form.image_insert');
+    route::get('form/image/download/{id}',[UserController::class, 'form_image_download'])->name('form.image_download');
+    route::post('form/image/delete',[UserController::class, 'form_image_delete'])->name('form.image_delete');
 
     // API : Province Relate =========================================================
     route::get('form/relate', [UserController::class, 'form_relate'])->name('form.relate');

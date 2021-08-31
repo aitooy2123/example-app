@@ -8,6 +8,8 @@
 <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
 <link rel="stylesheet" href="{{ asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
 <link rel="stylesheet" href="{{ asset('plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
+<link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
+<link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
 @endsection
 
 @section('custom-css')
@@ -61,11 +63,15 @@
                     @csrf
                     <div class="form-group">
                         <label for="">ชื่อ-นามสกุล</label>
-                        <input type="text" name="name" class="form-control" placeholder="ชื่อ-นามสกุล">
+                        <input type="text" name="name" value="{{ auth::user()->name }}" class="form-control" placeholder="ชื่อ-นามสกุล">
                     </div>
                     <div class="form-group">
                         <label for="">หน่วยงาน</label>
-                        <input type="text" name="organize" class="form-control" placeholder="ที่อยู่">
+                        <select name="organize" class="form-control select2bs4">
+                            @foreach($Organize as $val)
+                            <option value="{{ $val->id }}">{{ $val->org_name }}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="">จังหวัด</label>
@@ -118,15 +124,17 @@
                     </thead>
                     <tbody>
 
+                        @foreach($Relate as $val)
                         <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td>{{ $val->id }}</td>
+                            <td>{{ $val->name }}</td>
+                            <td>{{ $val->organize }}</td>
+                            <td>{{ $val->tumbon }}</td>
+                            <td>{{ $val->amphoe }}</td>
+                            <td>{{ $val->province }}</td>
+                            <td>{{ $val->zipcode }}</td>
                         </tr>
+                        @endforeach
 
                     </tbody>
                 </table>
@@ -135,6 +143,7 @@
             </div>
         </div>
     </section>
+
 </div>
 
 @endsection
@@ -153,6 +162,7 @@
 <script src="{{ asset('plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
+<script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
 @endsection
 
 @section('custom-js')
@@ -178,5 +188,19 @@
     $(function() {
         $('[data-toggle="tooltip"]').tooltip()
     })
+</script>
+
+
+
+<script>
+  $(function () {
+    //Initialize Select2 Elements
+    $('.select2').select2()
+
+    //Initialize Select2 Elements
+    $('.select2bs4').select2({
+      theme: 'bootstrap4'
+    })
+  });
 </script>
 @endsection

@@ -5,10 +5,19 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Province;
 use App\Models\User;
+use App\Models\UploadFile;
+use App\Models\UploadImg;
+use App\Models\Relate;
+use App\Models\Organize;
+
 use Illuminate\Support\Facades\log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
+use Image;
+use Carbon\Carbon;
 
 class UserController extends Controller
 {
@@ -162,8 +171,10 @@ class UserController extends Controller
     // Upload File -----------------------------------------------------------------------------------
     public function form_upload()
     {
-
-        return view('form_upload');
+        $file = UploadFile::all();
+        return view('form_upload', [
+            "file" => $file
+        ]);
     }
     public function form_upload_insert(Request $request)
     {
@@ -172,29 +183,124 @@ class UserController extends Controller
             'file' => 'mimes:doc,docx,xls,xlsx,pdf|max:2048'
         ]);
 
+        // Storage
+        $file_name = date('His') . '_' . $request->file->getClientOriginalName();
+        $file_path = $request->file('file')->storeAs('uploads/files', $file_name, 'public');
 
-        return back()->withInput()->with('Success', 'Upload Successfully');
+        //Public
+        $DateTime = carbon::now()->year + 543 . date('mdHis');
+        $public_name = $DateTime . rand('111', '999') . '.' . $request->file->extension();
+        $public_path = $request->file->move(public_path('uploads'), $public_name); //หลังจากเปลี่ยนชื่อไฟล์แล้วให้ย้ายไปที่ pubilb/uploads
+
+        $insert = new UploadFile;
+        $insert->file_name = $request->name;
+        $insert->file_path1 = $public_name;
+        $insert->file_path2 = $file_path;
+
+        if ($insert->save()) {
+            return back()->with('Success', 'อัพโหลดไฟล์สำเร็จ');
+        } else {
+            return back()->withInput()->with('Error', 'อัพโหลดไฟล์ไม่สำเร้จ');
+        }
     }
+    public function form_upload_download(Request $request)
+    {
+        $download = UploadFile::find($request->id);
+        return Storage::download('public/' . $download->file_path2);
+    }
+    public function form_upload_delete(Request $request)
+    {
+        // dd($request);
+        $delete = UploadFile::where('id', $request->id)->delete();
+        File::delete('uploads/' . $request->path1);
+        Storage::delete('public/' . $request->path2);
 
+        if ($delete) {
+            return back()->with('Success', 'ลบไฟล์สำเร็จ');
+        } else {
+            return back()->withInput()->with('Error', 'ลบไฟล์ไม่สำเร้จ');
+        }
+    }
 
     // Upload Image -----------------------------------------------------------------------------------
     public function form_image()
     {
-        return view('form_image');
+        $file = UploadImg::all();
+        return view('form_image', [
+            'file' => $file
+        ]);
     }
     public function form_image_insert(Request $request)
     {
         $request->validate([
             'name' => 'required',
-            'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'file' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-        return back()->withInput()->with('Success', 'Upload Successfully');
+
+        // Storage
+        $file_name = $request->file('file')->getClientOriginalName();
+        $file_path = $request->file('file')->store('images');
+
+        // Public
+        $DateTime = carbon::now()->year + 543 . date('mdHis');
+        $public_name = $DateTime . rand('111', '999') . '.' . $request->file->getClientOriginalExtension();
+        $public_path = $request->file->move(public_path('uploads/images/'), $public_name);
+
+        // save to thumbnail
+        Image::make($public_path)->fit(100, 100)->save(public_path('uploads/images/thumbnail/' . $public_name));
+
+        // save to resize
+        Image::make($public_path)->resize(500, null, function ($constraint) {
+            $constraint->aspectRatio();
+        })->save(public_path('uploads/images/resize/' . $public_name));
+
+        $insert = new UploadImg;
+        $insert->img_name = $request->name; // ชื่อของไฟล์
+        $insert->img_path1 = $public_name; // insert public
+        $insert->img_path2 =  $file_path; // insert storage
+        $insert->save();
+
+        if ($insert->save()) {
+            return back()->with('Success', 'อัพโหลดไฟล์สำเร็จ');
+        } else {
+            return back()->withInput()->with('Error', 'อัพโหลดไฟล์ไม่สำเร้จ');
+        }
     }
+    public function form_image_download(Request $request)
+    {
+        // dd($request);
+        $download = UploadImg::find($request->id);
+        return Storage::download($download->img_path2);
+    }
+    public function form_image_delete(Request $request)
+    {
+        // dd($request);
+        $delete = UploadImg::where('id', $request->id)->delete();
+        //delete public
+        File::delete('uploads/images/' . $request->path1);
+        File::delete('uploads/images/resize/' . $request->path1);
+        File::delete('uploads/images/thumbnail/' . $request->path1);
+        //delete storate
+        Storage::delete($request->path2);
+
+        if ($delete) {
+            return back()->with('Success', 'ลบไฟล์สำเร็จ');
+        } else {
+            return back()->withInput()->with('Error', 'ลบไฟล์ไม่สำเร้จ');
+        }
+    }
+
+
 
     // Relate Province -----------------------------------------------------S------------------------------
     public function form_relate()
     {
-        return view('form_relate');
+        $Relate = Relate::all();
+        $Organize = Organize::all();
+        return view('form_relate',[
+            'Relate' => $Relate,
+            'Organize' => $Organize
+        ]);
     }
     public function form_relate_insert(Request $request)
     {

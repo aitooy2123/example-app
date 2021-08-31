@@ -10,3 +10,11 @@
 <script src="{{ asset('plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
 <!-- pace-progress -->
 <script src="{{ asset('plugins/pace-progress/pace.min.js') }}"></script>
+
+<script src="{{ asset('plugins/toastr/toastr.min.js') }}"></script>
+
+@if (Session::get('Clear'))
+<script>
+    toastr.success('Clear Cache Successfully !!');
+</script>
+@endif
