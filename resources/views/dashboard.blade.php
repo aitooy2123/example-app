@@ -108,27 +108,43 @@
 
             <div class="row">
 
-                <div class="col-lg-6 col-md-6 col-sm-12">
-                    <div class="form-group boarder shadow">
-                        <div id="chartContainer1" style="height: 370px; width: 100%;"></div>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                    <div class="form-group boarder shadow-lg">
+                        <div class="card">
+                            <div class="card-body">
+                                <div id="chartContainer1" style="height: 300px; width: 100%;"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <div class="col-lg-6 col-md-6 col-sm-12">
-                    <div class="form-group boarder shadow">
-                        <div id="chartContainer2" style="height: 370px; width: 100%;"></div>
+                    <div class="form-group boarder shadow-lg">
+                        <div class="card">
+                            <div class="card-body">
+                                <div id="chartContainer2" style="height: 300px; width: 100%;"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <div class="col-lg-6 col-md-6 col-sm-12">
-                    <div class="form-group boarder shadow">
-                        <div id="chartContainer3" style="height: 370px; width: 100%;"></div>
+                    <div class="form-group boarder shadow-lg">
+                        <div class="card">
+                            <div class="card-body">
+                                <div id="chartContainer3" style="height: 300px; width: 100%;"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <div class="col-lg-6 col-md-6 col-sm-12">
-                    <div class="form-group boarder shadow">
-                        <div id="chartContainer4" style="height: 370px; width: 100%;"></div>
+                    <div class="form-group boarder shadow-lg">
+                        <div class="card">
+                            <div class="card-body">
+                                <div id="chartContainer4" style="height: 300px; width: 100%;"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
