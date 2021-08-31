@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Province;
+use App\Models\User;
 use Illuminate\Support\Facades\log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -83,6 +84,7 @@ class UserController extends Controller
     // Dashboard -----------------------------------------------------------------------------------
     public function dashboard()
     {
+        // กำหนด array ทดสอบ
         $dataPoints = array(
             array("y" => 25, "label" => "Sunday"),
             array("y" => 15, "label" => "Monday"),
@@ -129,7 +131,6 @@ class UserController extends Controller
         }
 
         // API ------------------------------------------------------------------------------------
-
         $datas4 = Cache::remember('datas4', '60', function () {
             $response = Http::get('https://covid19.ddc.moph.go.th/api/Usage-Stats-Count');
             return  json_decode($response->body());
@@ -139,12 +140,21 @@ class UserController extends Controller
         }
 
         //dd($dataPoints4);
+        $count1 = User::count();
+        $count2 = Province::count();
+        $count3 = DB::table('cars')->count();
+        $count4 = DB::table('customers')->count();
+        // dd($count2);
 
         return view('dashboard', [
             "dataPoints1" => $dataPoints1,
             "dataPoints2" => $dataPoints2,
             "dataPoints3" => $dataPoints3,
             "dataPoints4" => $dataPoints4,
+            "count1" => $count1,
+            "count2" => $count2,
+            "count3" => $count3,
+            "count4" => $count4,
         ]);
     }
 
