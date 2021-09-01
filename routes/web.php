@@ -52,6 +52,11 @@ Route::group(['middleware' => ['auth']], function () {
     // Dashboard =========================================================
     route::get('dashboard', [UserController::class, 'dashboard'])->name('dashboard');
 
+    // Profile
+    route::get('profile', [UserController::class, 'profile'])->name('profile');
+    route::post('profile/insert', [UserController::class, 'profile_insert'])->name('profile.insert');
+    Route::post('crop', [UserController::class, 'crop'])->name('crop');
+
     // Upload File =========================================================
     route::get('form/upload', [UserController::class, 'form_upload'])->name('form.upload');
     route::post('form/upload/insert', [UserController::class, 'form_upload_insert'])->name('form.upload_insert');

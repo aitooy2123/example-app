@@ -105,7 +105,7 @@
                             <td>{{ $val->id }}</td>
                             <td>{{ $val->file_name }}</td>
                             <td class="text-nowrap">
-                                <a href="{{ asset('uploads/'.$val->file_path1 ) }}" class="btn btn-sm btn-info" data-toggle="tooltip" title="Public"><i class="fas fa-download"></i></a>
+                                <a href="{{ asset('uploads/files/'.$val->file_path1 ) }}" class="btn btn-sm btn-info" data-toggle="tooltip" title="Public"><i class="fas fa-download"></i></a>
                                 <a href="{{ route('form.upload_download',['id'=>$val->id]) }}" class="btn btn-sm btn-primary" data-toggle="tooltip" title="Stroage"><i class="fas fa-download"></i></a>
 
                                 <form action="{{ route('form.upload_delete') }}" method="POST" class="d-inline">
@@ -155,10 +155,43 @@
 @section('custom-js')
 <script>
     $(function() {
-        $(" #example1").DataTable({ "responsive" : true, "lengthChange" : false, "autoWidth" : false, "buttons" : ["copy", "csv" , "excel" , "pdf" , "print" , "colvis" ] }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)'); }); $(function() { $('[data-toggle="tooltip" ]').tooltip() }) </script>
-    < script >
-        $(function() {
-            bsCustomFileInput.init();
-        });
+        $("#example1").DataTable({
+            "oLanguage": {
+                // "url": "https://cdn.datatables.net/plug-ins/1.10.22/i18n/Thai.json",
+                "sEmptyTable": "ไม่มีข้อมูลในตาราง",
+                "sInfo": "แสดง _START_ ถึง _END_ จาก _TOTAL_ แถว",
+                "sInfoEmpty": "แสดง 0 ถึง 0 จาก 0 แถว",
+                "sInfoFiltered": "(กรองข้อมูล _MAX_ ทุกแถว)",
+                "sInfoThousands": ",",
+                "sLengthMenu": "แสดง _MENU_ แถว",
+                "sLoadingRecords": "กำลังโหลดข้อมูล...",
+                "sProcessing": "กำลังดำเนินการ...",
+                "sSearch": "ค้นหา: ",
+                "sZeroRecords": "ไม่พบข้อมูล",
+                "oPaginate": {
+                    "sFirst": "หน้าแรก",
+                    "sPrevious": "ก่อนหน้า",
+                    "sNext": "ถัดไป",
+                    "sLast": "หน้าสุดท้าย"
+                },
+                "oAria": {
+                    "sSortAscending": ": เปิดใช้งานการเรียงข้อมูลจากน้อยไปมาก",
+                    "sSortDescending": ": เปิดใช้งานการเรียงข้อมูลจากมากไปน้อย"
+                }
+            },
+            "responsive": true,
+            "lengthChange": false,
+            "autoWidth": false,
+            "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+    });
+
+    $(function() {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+
+    $(function() {
+        bsCustomFileInput.init();
+    });
 </script>
 @endsection

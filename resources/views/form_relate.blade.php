@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="{{ asset('plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
 <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
 <link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+<!-- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" /> -->
 @endsection
 
 @section('custom-css')
@@ -65,14 +66,16 @@
                         <label for="">ชื่อ-นามสกุล</label>
                         <input type="text" name="name" value="{{ auth::user()->name }}" class="form-control" placeholder="ชื่อ-นามสกุล">
                     </div>
+
                     <div class="form-group">
-                        <label for="">หน่วยงาน</label>
-                        <select name="organize" class="form-control select2bs4">
+                        <label for="organize">หน่วยงาน</label>
+                        <select name="organize" class="form-control select2bs4 select2-danger"  data-dropdown-css-class="select2-danger" style="width: 100%;">
                             @foreach($Organize as $val)
                             <option value="{{ $val->id }}">{{ $val->org_name }}</option>
                             @endforeach
                         </select>
                     </div>
+                
                     <div class="form-group">
                         <label for="">จังหวัด</label>
                         <select id="input_province" class="form-control custom-select" onchange="showAmphoes()">
@@ -163,26 +166,43 @@
 <script src="{{ asset('plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
 <script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> -->
 @endsection
 
 @section('custom-js')
+
+
 <script>
     $(function() {
         $("#example1").DataTable({
+            "oLanguage": {
+                // "url": "https://cdn.datatables.net/plug-ins/1.10.22/i18n/Thai.json",
+                "sEmptyTable": "ไม่มีข้อมูลในตาราง",
+                "sInfo": "แสดง _START_ ถึง _END_ จาก _TOTAL_ แถว",
+                "sInfoEmpty": "แสดง 0 ถึง 0 จาก 0 แถว",
+                "sInfoFiltered": "(กรองข้อมูล _MAX_ ทุกแถว)",
+                "sInfoThousands": ",",
+                "sLengthMenu": "แสดง _MENU_ แถว",
+                "sLoadingRecords": "กำลังโหลดข้อมูล...",
+                "sProcessing": "กำลังดำเนินการ...",
+                "sSearch": "ค้นหา: ",
+                "sZeroRecords": "ไม่พบข้อมูล",
+                "oPaginate": {
+                    "sFirst": "หน้าแรก",
+                    "sPrevious": "ก่อนหน้า",
+                    "sNext": "ถัดไป",
+                    "sLast": "หน้าสุดท้าย"
+                },
+                "oAria": {
+                    "sSortAscending": ": เปิดใช้งานการเรียงข้อมูลจากน้อยไปมาก",
+                    "sSortDescending": ": เปิดใช้งานการเรียงข้อมูลจากมากไปน้อย"
+                }
+            },
             "responsive": true,
             "lengthChange": false,
             "autoWidth": false,
             "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
         }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-        $('#example2').DataTable({
-            "paging": true,
-            "lengthChange": false,
-            "searching": false,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false,
-            "responsive": true,
-        });
     });
 
     $(function() {
@@ -193,14 +213,14 @@
 
 
 <script>
-  $(function () {
-    //Initialize Select2 Elements
-    $('.select2').select2()
+    $(function() {
+        //Initialize Select2 Elements
+        $('.select2').select2()
 
-    //Initialize Select2 Elements
-    $('.select2bs4').select2({
-      theme: 'bootstrap4'
-    })
-  });
+        //Initialize Select2 Elements
+        $('.select2bs4').select2({
+            theme: 'bootstrap4'
+        })
+    });
 </script>
 @endsection

@@ -1,10 +1,10 @@
- <?php
+<?php
  
  use Illuminate\Support\Facades\Auth;
  ?>
  
  <!-- Navbar -->
-  <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+  <nav class="main-header navbar navbar-expand  navbar-white navbar-light">
     <!-- Left navbar links -->
     <ul class="navbar-nav">
       <li class="nav-item">
@@ -16,11 +16,9 @@
       <li class="nav-item d-none d-sm-inline-block">
         <a href="{{ route('contact') }}" class="nav-link">Contact</a>
       </li>
-      
       <li class="nav-item d-none d-sm-inline-block">
-        <a href="{{ url('clear-cache') }}" class="nav-link">Clear</a>
+        <a href="{{ url('clear-cache') }}" class="nav-link">ClearCache</a>
       </li>
-
     </ul>
 
     <!-- Right navbar links -->
@@ -28,13 +26,25 @@
 
       <li class="nav-item dropdown user-menu">
         <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-          <img src="../../dist/img/user2-160x160.jpg" class="user-image img-circle elevation-2" alt="User Image">
+          <img 
+
+          @if(empty(Auth::user()->avatar)) src="{{ asset('dist/img/avatar4.png') }}"
+          @else src="{{ asset('uploads/avatar/'.Auth::user()->avatar) }}"
+          @endif
+
+          class="user-image img-circle elevation-2" alt="User Image">
           <span class="d-none d-md-inline">{{ Auth::user()->name }}</span>
         </a>
         <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
           <!-- User image -->
           <li class="user-header bg-primary">
-            <img src="../../dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+            <img 
+
+            @if(empty(Auth::user()->avatar)) src="{{ asset('dist/img/avatar4.png') }}"
+            @else src="{{ asset('uploads/avatar/'.Auth::user()->avatar) }}"
+            @endif
+            
+            class="img-circle elevation-2" alt="User Image">
 
             <p>
             {{ Auth::user()->name }}
@@ -58,7 +68,7 @@
           </li>
           <!-- Menu Footer-->
           <li class="user-footer">
-            <a href="#" class="btn btn-outline-info rounded-pill btn-flat">Profile</a>
+            <a href="{{ route('profile') }}" class="btn btn-outline-info rounded-pill btn-flat">Profile</a>
             <a href="{{ route('logout') }}" class="btn btn-outline-danger rounded-pill btn-flat float-right" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Sign out</a>
           </li>
         </ul>
@@ -74,7 +84,11 @@
           <i class="fas fa-expand-arrows-alt"></i>
         </a>
       </li>
-
+      <li class="nav-item">
+        <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#" role="button">
+          <i class="fas fa-th-large"></i>
+        </a>
+      </li>
 
     </ul>
   </nav>

@@ -2,6 +2,8 @@
 
 use App\Models\CmsHelper as cms;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
+
 ?>
 
 @extends('layouts.master')
@@ -122,7 +124,6 @@ use Carbon\Carbon;
                                 </a>
                                 @endif
 
-
                             </td>
                             <td><span class="text-bold">{{ $val->img_name }}</span>
                                 <p class="mt-4">สร้างเมื่อ : {{ cms::DateThai($val->created_at) }}</p>
@@ -175,39 +176,62 @@ use Carbon\Carbon;
 @section('custom-js')
 <script>
     $(function() {
-        $(" #example1").DataTable({
+        $("#example1").DataTable({
+            "oLanguage": {
+                // "url": "https://cdn.datatables.net/plug-ins/1.10.22/i18n/Thai.json",
+                "sEmptyTable": "ไม่มีข้อมูลในตาราง",
+                "sInfo": "แสดง _START_ ถึง _END_ จาก _TOTAL_ แถว",
+                "sInfoEmpty": "แสดง 0 ถึง 0 จาก 0 แถว",
+                "sInfoFiltered": "(กรองข้อมูล _MAX_ ทุกแถว)",
+                "sInfoThousands": ",",
+                "sLengthMenu": "แสดง _MENU_ แถว",
+                "sLoadingRecords": "กำลังโหลดข้อมูล...",
+                "sProcessing": "กำลังดำเนินการ...",
+                "sSearch": "ค้นหา: ",
+                "sZeroRecords": "ไม่พบข้อมูล",
+                "oPaginate": {
+                    "sFirst": "หน้าแรก",
+                    "sPrevious": "ก่อนหน้า",
+                    "sNext": "ถัดไป",
+                    "sLast": "หน้าสุดท้าย"
+                },
+                "oAria": {
+                    "sSortAscending": ": เปิดใช้งานการเรียงข้อมูลจากน้อยไปมาก",
+                    "sSortDescending": ": เปิดใช้งานการเรียงข้อมูลจากมากไปน้อย"
+                }
+            },
             "responsive": true,
             "lengthChange": false,
             "autoWidth": false,
             "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
         }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
     });
+
     $(function() {
-        $('[data-toggle="tooltip" ]').tooltip()
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+
+    $(function() {
+        bsCustomFileInput.init();
+    });
+</script>
+
+<script>
+    $(function() {
+        $(document).on('click', '[data-toggle="lightbox"]', function(event) {
+            event.preventDefault();
+            $(this).ekkoLightbox({
+                alwaysShowClose: true
+            });
+        });
+
+        $('.filter-container').filterizr({
+            gutterPixels: 3
+        });
+        $('.btn[data-filter]').on('click', function() {
+            $('.btn[data-filter]').removeClass('active');
+            $(this).addClass('active');
+        });
     })
 </script>
-< script>
-    $(function() {
-    bsCustomFileInput.init();
-    });
-    </script>
-
-    <script>
-        $(function() {
-            $(document).on('click', '[data-toggle="lightbox"]', function(event) {
-                event.preventDefault();
-                $(this).ekkoLightbox({
-                    alwaysShowClose: true
-                });
-            });
-
-            $('.filter-container').filterizr({
-                gutterPixels: 3
-            });
-            $('.btn[data-filter]').on('click', function() {
-                $('.btn[data-filter]').removeClass('active');
-                $(this).addClass('active');
-            });
-        })
-    </script>
-    @endsection
+@endsection

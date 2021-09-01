@@ -42,14 +42,14 @@
     <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
-            <!-- Small boxes (Stat box) -->
+
             <div class="row">
 
                 <div class="col-lg-3 col-6">
                     <div class="small-box bg-warning">
                         <div class="inner">
                             <h3>{{ empty($count1)?'0': number_format($count1) }}</h3>
-                            <p>User Registrations</p>
+                            <p>จำนวนฐานข้อมูลผู้ใช้งาน</p>
                         </div>
                         <div class="icon">
                             <i class="ion ion-person-add"></i>
@@ -59,49 +59,45 @@
                 </div>
 
                 <div class="col-lg-3 col-6">
-                    <!-- small box -->
                     <div class="small-box bg-info">
                         <div class="inner">
                             <h3>{{ empty($count2)?'0': number_format($count2) }}</h3>
-                            <p>New Orders</p>
+                            <p>จำนวนฐานข้อมูลจังหวัด</p>
                         </div>
                         <div class="icon">
-                            <i class="ion ion-bag"></i>
+                            <i class="fas fa-map-marked-alt"></i>
                         </div>
                         <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
-                <!-- ./col -->
+
                 <div class="col-lg-3 col-6">
-                    <!-- small box -->
                     <div class="small-box bg-success">
                         <div class="inner">
                             <h3>{{ empty($count3)?'0': number_format($count3) }}</h3>
 
-                            <p>Bounce Rate</p>
+                            <p>จำนวนฐานข้อมูลรถยนต์</p>
                         </div>
                         <div class="icon">
-                            <i class="ion ion-stats-bars"></i>
+                            <i class="fas fa-car"></i>
                         </div>
                         <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
-                <!-- ./col -->
+
                 <div class="col-lg-3 col-6">
-                    <!-- small box -->
                     <div class="small-box bg-danger">
                         <div class="inner">
                             <h3>{{ empty($count4)?'0': number_format($count4) }}</h3>
-
-                            <p>Unique Visitors</p>
+                            <p>จำนวนฐานข้อมูลลูกค้า</p>
                         </div>
                         <div class="icon">
-                            <i class="ion ion-pie-graph"></i>
+                            <i class="fas fa-users"></i>
                         </div>
                         <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
-                <!-- ./col -->
+
             </div>
 
             <div class="row">

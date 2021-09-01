@@ -10,6 +10,7 @@ use App\Models\UploadImg;
 use App\Models\Relate;
 use App\Models\Organize;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -104,7 +105,7 @@ class UserController extends Controller
             array("y" => 20, "label" => "Saturday")
         );
 
-        // Cache province ------------------------------------------------------------------------------------
+        // Province + Cache ------------------------------------------------------------------------------------
         $datas1 = Cache::remember('datas1', '60', function () {
             return  DB::table('today-cases-line-lists')
                 ->selectRaw('count(txn_date) as totals,province')
@@ -116,7 +117,7 @@ class UserController extends Controller
             $dataPoints1[] = array("y" => $data1->totals, "label" => $data1->province);
         }
 
-        // Cache Gender ------------------------------------------------------------------------------------
+        // Gender + Cache ------------------------------------------------------------------------------------
         $datas2 = Cache::remember('datas2', '60', function () {
             return  DB::table('today-cases-line-lists')
                 ->selectRaw('count(txn_date) as totals,gender')
@@ -127,7 +128,7 @@ class UserController extends Controller
             $dataPoints2[] = array("y" => $data2->totals, "label" => $data2->gender);
         }
 
-        // Cache Risk ------------------------------------------------------------------------------------
+        // Risk + Cache ------------------------------------------------------------------------------------
         $datas3 = Cache::remember('datas3', '60', function () {
             return  DB::table('today-cases-line-lists')
                 ->selectRaw('count(txn_date) as totals,risk')
@@ -139,7 +140,7 @@ class UserController extends Controller
             $dataPoints3[] = array("y" => $data3->totals, "label" => $data3->risk);
         }
 
-        // API ------------------------------------------------------------------------------------
+        // API + Cache ------------------------------------------------------------------------------------
         $datas4 = Cache::remember('datas4', '60', function () {
             $response = Http::get('https://covid19.ddc.moph.go.th/api/Usage-Stats-Count');
             return  json_decode($response->body());
@@ -149,10 +150,12 @@ class UserController extends Controller
         }
 
         //dd($dataPoints4);
+
         $count1 = User::count();
         $count2 = Province::count();
         $count3 = DB::table('cars')->count();
         $count4 = DB::table('customers')->count();
+
         // dd($count2);
 
         return view('dashboard', [
@@ -178,24 +181,25 @@ class UserController extends Controller
     }
     public function form_upload_insert(Request $request)
     {
+        //ตรวจสอบเงื่อนไข
         $request->validate([
             'name' => 'required',
             'file' => 'mimes:doc,docx,xls,xlsx,pdf|max:2048'
         ]);
 
-        // Storage
-        $file_name = date('His') . '_' . $request->file->getClientOriginalName();
-        $file_path = $request->file('file')->storeAs('uploads/files', $file_name, 'public');
+        //Rename =======================================================================================
+        $rename = carbon::now()->year + 543 . date('mdHis') . rand('111', '999');
 
-        //Public
-        $DateTime = carbon::now()->year + 543 . date('mdHis');
-        $public_name = $DateTime . rand('111', '999') . '.' . $request->file->extension();
-        $public_path = $request->file->move(public_path('uploads'), $public_name); //หลังจากเปลี่ยนชื่อไฟล์แล้วให้ย้ายไปที่ pubilb/uploads
+        //Stroage =======================================================================================
+        $filename = $rename  . '.' . $request->file->getClientOriginalExtension();
+        $storage_path = $request->file('file')->storeAs('files', $filename); // Storage 
+        $public_path = $request->file->move(public_path('uploads/files/'), $filename); // Public
 
+        //Insert =======================================================================================
         $insert = new UploadFile;
         $insert->file_name = $request->name;
-        $insert->file_path1 = $public_name;
-        $insert->file_path2 = $file_path;
+        $insert->file_path1 = $filename;
+        $insert->file_path2 = $storage_path;
 
         if ($insert->save()) {
             return back()->with('Success', 'อัพโหลดไฟล์สำเร็จ');
@@ -206,14 +210,13 @@ class UserController extends Controller
     public function form_upload_download(Request $request)
     {
         $download = UploadFile::find($request->id);
-        return Storage::download('public/' . $download->file_path2);
+        return Storage::download($download->file_path2);
     }
     public function form_upload_delete(Request $request)
     {
-        // dd($request);
         $delete = UploadFile::where('id', $request->id)->delete();
-        File::delete('uploads/' . $request->path1);
-        Storage::delete('public/' . $request->path2);
+        File::delete('uploads/files/' . $request->path1);
+        Storage::delete($request->path2);
 
         if ($delete) {
             return back()->with('Success', 'ลบไฟล์สำเร็จ');
@@ -232,38 +235,38 @@ class UserController extends Controller
     }
     public function form_image_insert(Request $request)
     {
+        // ตรวจสอบเงื่อนไข
         $request->validate([
             'name' => 'required',
             'file' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+        // Rename =======================================================================================
+        $rename = carbon::now()->year + 543 . date('mdHis') . rand('111', '999');
 
-        // Storage
-        $file_name = $request->file('file')->getClientOriginalName();
-        $file_path = $request->file('file')->store('images');
+        // Upload Storage & Public  ====================================================================
+        $img_name = $rename  . '.' . $request->file->getClientOriginalExtension();
+        $storage_path = $request->file('file')->storeAs('images', $img_name); // Storage 
+        $public_path = $request->file->move(public_path('uploads/images/'), $img_name); // Public
 
-        // Public
-        $DateTime = carbon::now()->year + 543 . date('mdHis');
-        $public_name = $DateTime . rand('111', '999') . '.' . $request->file->getClientOriginalExtension();
-        $public_path = $request->file->move(public_path('uploads/images/'), $public_name);
+        // Thumbnail =======================================================================================
+        Image::make($public_path)->fit(100, 100)->save(public_path('uploads/images/thumbnail/' . $img_name));
 
-        // save to thumbnail
-        Image::make($public_path)->fit(100, 100)->save(public_path('uploads/images/thumbnail/' . $public_name));
-
-        // save to resize
-        Image::make($public_path)->resize(500, null, function ($constraint) {
+        // Resize =======================================================================================
+        Image::make($public_path)->resize(1280, null, function ($constraint) {
             $constraint->aspectRatio();
-        })->save(public_path('uploads/images/resize/' . $public_name));
+        })
+            ->save(public_path('uploads/images/resize/' . $img_name));
 
+        //Insert =======================================================================================
         $insert = new UploadImg;
-        $insert->img_name = $request->name; // ชื่อของไฟล์
-        $insert->img_path1 = $public_name; // insert public
-        $insert->img_path2 =  $file_path; // insert storage
-        $insert->save();
+        $insert->img_name = $request->name;
+        $insert->img_path1 = $img_name;
+        $insert->img_path2 = $storage_path;
 
         if ($insert->save()) {
-            return back()->with('Success', 'อัพโหลดไฟล์สำเร็จ');
+            return back()->with('Success', 'อัพโหลดไฟล์ สำเร็จ');
         } else {
-            return back()->withInput()->with('Error', 'อัพโหลดไฟล์ไม่สำเร้จ');
+            return back()->withInput()->with('Error', 'อัพโหลดไฟล์ไม่สำเร็จ');
         }
     }
     public function form_image_download(Request $request)
@@ -289,15 +292,12 @@ class UserController extends Controller
             return back()->withInput()->with('Error', 'ลบไฟล์ไม่สำเร้จ');
         }
     }
-
-
-
     // Relate Province -----------------------------------------------------S------------------------------
     public function form_relate()
     {
         $Relate = Relate::all();
         $Organize = Organize::all();
-        return view('form_relate',[
+        return view('form_relate', [
             'Relate' => $Relate,
             'Organize' => $Organize
         ]);
@@ -307,6 +307,40 @@ class UserController extends Controller
         return back()->withInput()->with('Success', 'Insert Successfully');
     }
 
+
+    // Profile -----------------------------------------------------S------------------------------
+    public function profile()
+    {
+        $Profile = User::where('id', auth::user()->id)->first();
+        return view('profile', [
+            'Profile' => $Profile
+        ]);
+    }
+
+    public function profile_insert()
+    {
+        // return view('profile');
+    }
+
+    function crop(Request $request)
+    {
+        File::delete('uploads/avatar/' . auth::user()->avatar);
+
+        $path = 'uploads/avatar/';
+        $file = $request->file('file');
+        $new_image_name = 'USER' . uniqid() . '.jpg';
+        $upload = $file->move(public_path($path), $new_image_name);
+
+        $update = User::find(auth::user()->id);
+        $update->avatar = $new_image_name;
+        $update->save();
+
+        if ($upload) {
+            return response()->json(['status' => 1, 'msg' => 'Image has been cropped successfully.', 'name' => $new_image_name]);
+        } else {
+            return response()->json(['status' => 0, 'msg' => 'Something went wrong, try again later']);
+        }
+    }
 
     // Contact Us -----------------------------------------------------S------------------------------
     public function contact()
