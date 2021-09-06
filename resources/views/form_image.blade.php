@@ -69,11 +69,31 @@ use Illuminate\Support\Facades\Storage;
                 </div>
                 @endif
 
+                <?php
+                $title = [
+                    'ให้ห่วงกันบ้างเป็นไร ให้ห่วงใย..ให้มีสิทธิ์ ให้นะ..ให้ลองคิด รักสักนิดก็เพียงพอ',
+                    'เกิดเป็นหญิงจริงแท้ยิ่งลำบาก จะเอ่ยปากฝากใครว่าคิดถึง คงทำได้แค่เพียงใจคะนึง มิอาจเอื้อมเอ่ยถึงความในใจ',
+                    'เป็นเพราะกลัวว่าเธอจะไกลห่าง จึงหาทางตีสนิทชิดเคียงใกล้ แม้จะรู้ว่าเธอไม่มีใจ ไม่ทำให้หลีกไกลไปจากเธอ',
+                    'รักเธอ แค่ไหน อย่ารู้ อย่าดู อย่าคิด แค่เห็น รู้ไป เท่านั้น เดี๋ยวเซ็ง รู้ไว้ ที่เห็น รักเธอ',
+                    'วันนั้น กับวันนี้ วันที่ผ่านมาเนิ่นนาน วันวาน กับวันหวาน ตลอดกาลยังคงเดิม',
+                    'อย่าหวั่นใจไปเลยคนดี ฉันคงไม่มีวันที่จะแปรผัน ความรักความผูกพัน ยังคงมั่น..ฉันสัญญา',
+                    'อ่อนแอก็แพ้ไป คนไหวเขาจะยืน',
+                    'เป็นผู้หญิงสตรอง ผู้ชายไม่มองต้องเดินชน',
+                    'เป็นคนอื่นเป็นได้ไม่นาน เป็นตัวเองเป็นได้ตลอดไป',
+                    'คนอะไรสวยไม่รู้จักพัก น่ารักไม่รู้จักพอ',
+                    'ชอบกินน้ำเป็นขวด หรือชอบน้ำที่กรวดไปให้คะ',
+                    'โตมาถึงได้รู้ว่าชินจังไม่ใช่การ์ตูน แต่เป็นความรู้สึก',
+                    'ลองไม่พยายามตามหาความรักดูสิ เดี๋ยวสักวันความรักจะตามหาเราเอง',
+                    'หากตราบใด สายนทียังปรี่ไหล สู่มหาชลาลัย กระแสสินธุ์ เกลียวคลื่นยังกระทบฝั่งดั่งอาจิณต์ เป็นนิจศีล ตราบนั้น ฉันรักเธอ'
+                ];
+                $random_name = array_rand($title,1);
+                ?>
+
                 <form action="{{ route('form.image_insert') }}" method="post" enctype="multipart/form-data">
                     @csrf
                     <div class="form-group">
                         <label for="">Name</label>
-                        <input type="text" name="name" value="{{ old('name') }}" class="form-control" required>
+                        <input type="text" name="name" value="{{ $title[$random_name] }}" class="form-control text-bold" required>
                     </div>
 
 
@@ -85,9 +105,8 @@ use Illuminate\Support\Facades\Storage;
                         </div>
                     </div>
 
-
                     <div class="text-right">
-                        <button type="reset" class="btn btn-danger" style="width: 100px;">reset</button>
+                        <!-- <button type="reset" class="btn btn-danger" style="width: 100px;">reset</button> -->
                         <button type="submit" class="btn btn-success" style="width: 100px;">save</button>
                     </div>
                 </form>
@@ -125,11 +144,12 @@ use Illuminate\Support\Facades\Storage;
                                 @endif
 
                             </td>
-                            <td><span class="text-bold">{{ $val->img_name }}</span>
-                                <p class="mt-4">สร้างเมื่อ : {{ cms::DateThai($val->created_at) }}</p>
+                            <td>
+                                <span class="text-bold">{{ $val->img_name }}</span>
+                                <p class="pt-4 text-blue">สร้างเมื่อ : {{ cms::DateThai($val->created_at)['dMY'] }}</p>
                             </td>
                             <td class="text-center text-nowrap">
-                                <a href="{{ asset('uploads/images/'.$val->img_path1) }}" class="btn btn-sm btn-info" data-toggle="tooltip" title="Public"><i class="fas fa-download"></i></a>
+                                <a href="{{ asset('uploads/images/'.$val->img_path1) }}" target="_blank" class="btn btn-sm btn-info" data-toggle="tooltip" title="Public"><i class="fas fa-download"></i></a>
                                 <a href="{{ route('form.image_download',['id'=>$val->id]) }}" class="btn btn-sm btn-primary" data-toggle="tooltip" title="Stroage"><i class="fas fa-download"></i></a>
                                 <form action="{{ route('form.image_delete') }}" method="POST" class="d-inline">
                                     @csrf

@@ -52,6 +52,8 @@
                         <p class="lead mb-5">123 Testing Ave, Testtown, 9876 NA<br>
                             Phone: +1 234 56789012
                         </p>
+
+                        <!-- <img src="https://ddc.moph.go.th/ddcmap/img/itc.jpg" class="img-fluid"> -->
                     </div>
                 </div>
                 <div class="col-7">

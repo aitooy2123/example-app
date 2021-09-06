@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Hash;
+
 use Image;
 use Carbon\Carbon;
 
@@ -240,22 +242,38 @@ class UserController extends Controller
             'name' => 'required',
             'file' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+
+        // ตรวจสอบว่ามี folder หรือไม่ หากไม่มีให้สร้าง
+        $folder_image = "uploads/images/";
+        $folder_thumbnail = "uploads/images/thumbnail/";
+        $folder_resize = "uploads/images/resize/";
+
+        if (!File::exists($folder_image)) {
+            File::makeDirectory($folder_image, 0755, true, true);
+        }
+        if (!File::exists($folder_thumbnail)) {
+            File::makeDirectory($folder_thumbnail, 0755, true, true);
+        }
+        if (!File::exists($folder_resize)) {
+            File::makeDirectory($folder_resize, 0755, true, true);
+        }
+
         // Rename =======================================================================================
         $rename = carbon::now()->year + 543 . date('mdHis') . rand('111', '999');
 
         // Upload Storage & Public  ====================================================================
         $img_name = $rename  . '.' . $request->file->getClientOriginalExtension();
         $storage_path = $request->file('file')->storeAs('images', $img_name); // Storage 
-        $public_path = $request->file->move(public_path('uploads/images/'), $img_name); // Public
+        $public_path = $request->file->move(public_path($folder_image), $img_name); // Public
 
         // Thumbnail =======================================================================================
-        Image::make($public_path)->fit(100, 100)->save(public_path('uploads/images/thumbnail/' . $img_name));
+        Image::make($public_path)->fit(100, 100)->save(public_path($folder_thumbnail . $img_name));
 
         // Resize =======================================================================================
         Image::make($public_path)->resize(1280, null, function ($constraint) {
             $constraint->aspectRatio();
         })
-            ->save(public_path('uploads/images/resize/' . $img_name));
+            ->save(public_path($folder_resize . $img_name));
 
         //Insert =======================================================================================
         $insert = new UploadImg;
@@ -292,19 +310,40 @@ class UserController extends Controller
             return back()->withInput()->with('Error', 'ลบไฟล์ไม่สำเร้จ');
         }
     }
+
     // Relate Province -----------------------------------------------------S------------------------------
     public function form_relate()
     {
         $Relate = Relate::all();
         $Organize = Organize::all();
+        $Users = User::all();
+
+        foreach ($Users as $val) {
+            $User[] =  $val->name;
+        }
+        // dd($User);
+
         return view('form_relate', [
             'Relate' => $Relate,
-            'Organize' => $Organize
+            'Organize' => $Organize,
+            'User' => $User
         ]);
     }
     public function form_relate_insert(Request $request)
     {
-        return back()->withInput()->with('Success', 'Insert Successfully');
+        $insert = new Relate;
+        $insert->name = $request->name;
+        $insert->organize = $request->organize;
+        $insert->province = $request->province;
+        $insert->amphoe = $request->amphoe;
+        $insert->tumbon = $request->tumbon;
+        $insert->zipcode = $request->zipcode;
+
+        if ($insert->save()) {
+            return back()->with('Success', 'บันทึกสำเร็จ');
+        } else {
+            return back()->withInput()->with('Error', 'บันทึกไม่สำเร็จ');
+        }
     }
 
 
@@ -312,23 +351,32 @@ class UserController extends Controller
     public function profile()
     {
         $Profile = User::where('id', auth::user()->id)->first();
+
         return view('profile', [
             'Profile' => $Profile
         ]);
     }
-
-    public function profile_insert()
+    public function profile_update(Request $request)
     {
-        // return view('profile');
+        // dd($request);
+        $update = User::find(auth::user()->id);
+        $update->name = $request->name;
+        $update->save();
+
+        if ($update->save()) {
+            return back()->with('Success', 'แก้ไขข้อมูลเรียบร้อยแล้ว');
+        } else {
+            return back()->withInput()->with('Error', 'ไม่สามารถแก้ไขข้อมูลได้');
+        }
     }
-
-    function crop(Request $request)
+    public function crop(Request $request)
     {
-        File::delete('uploads/avatar/' . auth::user()->avatar);
-
         $path = 'uploads/avatar/';
+        File::delete($path . auth::user()->avatar);
+        // File::cleanDirectory($path);
+
         $file = $request->file('file');
-        $new_image_name = 'USER' . uniqid() . '.jpg';
+        $new_image_name = 'User' . auth::user()->id . '.jpg';
         $upload = $file->move(public_path($path), $new_image_name);
 
         $update = User::find(auth::user()->id);
@@ -341,6 +389,20 @@ class UserController extends Controller
             return response()->json(['status' => 0, 'msg' => 'Something went wrong, try again later']);
         }
     }
+
+    public function change_password(Request $request)
+    {
+        // dd($request->Password, Hash::make($request->Password));
+        $update = User::find(auth::user()->id);
+        $update->password = Hash::make($request->Password);
+       
+        if( $update->save()){
+            return back()->with('Success','แก้ไขรหัสผ่านสำเร็จ');
+        }else{
+            return back()->with('Error','เปลี่ยนรหัสผ่านไม่สำเร็จ');
+        }
+    }
+
 
     // Contact Us -----------------------------------------------------S------------------------------
     public function contact()

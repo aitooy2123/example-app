@@ -1,3 +1,12 @@
+<?php
+
+use App\Models\CmsHelper as cms;
+use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
+
+// dd(cms::DateThai(carbon::now()));
+?>
+
 @extends('layouts.master')
 
 @php $header='Profile'; @endphp
@@ -5,7 +14,6 @@
 
 @section('custom-css-script')
 <link rel="stylesheet" href="{{ asset('plugins/ijaboCropTool-master/ijaboCropTool.min.css') }}">
-<!-- Toastr -->
 <link rel="stylesheet" href="{{ asset('plugins/toastr/toastr.min.css') }}">
 @endsection
 
@@ -39,8 +47,13 @@
                     <div class="card card-primary card-outline">
                         <div class="card-body box-profile">
                             <div class="text-center">
-                                <img class="profile-user-img img-fluid img-circle" @if(empty($Profile->avatar)) src="{{ asset('dist/img/avatar4.png') }}">
-                                @else src="{{ asset('uploads/avatar/'.$Profile->avatar) }}">
+
+                                @if(empty($Profile->avatar))
+                                <img class="profile-user-img img-fluid img-circle" src="{{ asset('dist/img/avatar4.png') }}">
+                                @else
+                                <!-- <a class="img-fluid h-50 w-50" data-placement="right" data-toggle="tooltip" data-html="true" title="<img src='{{ asset('uploads/avatar/'.$Profile->avatar) }}'>"> -->
+                                <img class="profile-user-img  img-circle" src="{{ asset('uploads/avatar/'.$Profile->avatar) }}">
+                                <!-- </a> -->
                                 @endif
 
                             </div>
@@ -52,7 +65,7 @@
                                 {{ auth::user()->class }}
                             </p>
 
-                            <input type="file" name="file" id="file" class="btn btn-default btn-block d-none" accept=".jpg,.jpeg,.png">
+                            <input type="file" name="file" id="file" class="btn btn-default btn-block d-none"  accept=".jpg,.jpeg,.png">
                             <a href="javascript:void(0)" id="change_file" class="btn bg-gradient-pink btn-block"><b>Change Picture</b></a>
 
                         </div>
@@ -71,26 +84,28 @@
                             </ul>
                         </div><!-- /.card-header -->
                         <div class="card-body">
+
                             <div class="tab-content">
 
                                 <div class="active tab-pane" id="activity">
-                                    <form class="form-horizontal">
+                                    <form action="{{ route('profile.update') }}" method="POST" class=" horizontal">
+                                        @csrf
                                         <div class="form-group row">
                                             <label for="inputName" class="col-sm-2 col-form-label">ชื่อ-นามสกุล</label>
                                             <div class="col-sm-10">
-                                                <input type="text" class="form-control" id="inputName" placeholder="Name" value="{{ auth::user()->name }}">
+                                                <input type="text" class="form-control" name="name" placeholder="Name" value="{{ auth::user()->name }}">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
                                             <div class="col-sm-10">
-                                                <input type="email" class="form-control" id="inputEmail" placeholder="Email" value="{{ auth::user()->email }}">
+                                                <input type="email" class="form-control" placeholder="Email" value="{{ auth::user()->email }}" readonly>
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label for="inputName2" class="col-sm-2 col-form-label">หน่วยงาน</label>
                                             <div class="col-sm-10">
-                                                <input type="text" class="form-control" id="inputName2" placeholder="Name">
+                                                <input type="text" class="form-control" id="inputName2" value="{{ cms::GetOrg($Profile->organize_id) }}" readonly>
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -112,19 +127,24 @@
                                             </div>
                                         </div>
                                     </form>
+
                                 </div>
                                 <!-- /.tab-pane -->
 
 
                                 <div class=" tab-pane" id="settings">
 
+                                    <div class="alert alert-warning" role="alert">
+                                        <strong>{{ password_hash("123456", PASSWORD_DEFAULT) }}</strong>
+                                    </div>
 
-                                    <form class="form-horizontal">
+                                    <form action="{{ route('change_password') }}" class="form-horizontal" method="POST">
+                                        @csrf
 
                                         <div class="form-group row">
                                             <label for="inputEmail" class="col-sm-2 col-form-label">Password</label>
                                             <div class="col-sm-10">
-                                                <input type="password" class="form-control" id="Password" placeholder="Password">
+                                                <input type="password" class="form-control" name="Password" placeholder="Password">
                                             </div>
                                         </div>
 
@@ -154,7 +174,6 @@
 
 @section('custom-js-script')
 <script src="{{ asset('plugins/ijaboCropTool-master/ijaboCropTool.min.js') }}"></script>
-<!-- Toastr -->
 <script src="{{ asset('plugins/toastr/toastr.min.js') }}"></script>
 @endsection
 
@@ -170,28 +189,40 @@
         withCSRF: ['_token', '{{ csrf_token() }}'],
         onSuccess: function(message, element, status) {
             //  alert(message);
-            window.location.reload();
+            // location.reload();
 
-            // toastr.success(
-            //     message,
-            //     'Success :', {
-            //         timeOut: 1000,
-            //         fadeOut: 1000,
-            //         onHidden: function() {
-            //             window.location.reload();
-            //         }
-            //     }
-            // );
+            toastr.success(
+                message,
+                'Success :', {
+                    timeOut: 1000,
+                    fadeOut: 1000,
+                    onHidden: function() {
+                        window.location.reload();
+                    }
+                }
+            );
         },
         onError: function(message, element, status) {
             alert(message);
         }
     });
+</script>
 
+@if ($message = Session::get('Success'))
+<script>
+    toastr.success('แก้ไขเรียบร้อย');
+</script>
+@endif
+
+
+<script language="JavaScript">
     $(document).on('click', '#change_file', function() {
         $('#file').click();
     });
-</script>
 
+    $(function() {
+        $('[data-toggle="tooltip"]').tooltip()
+    });
+</script>
 
 @endsection

@@ -59,12 +59,31 @@
                 </div>
                 @endif
 
+                <?php
+                $title = [
+                    'ครึ่งหนึ่งของความสนุกในการเดินทาง คือความงดงามของการหลงทาง',
+                    'ถ้าเธอชอบคนเก่ง เราเที่ยวเก่งเธอชอบไหม',
+                    'แพลนเที่ยวมีอยู่เต็มหัว ทั้งเนื้อทั้งตัวมีอยู่ร้อยเดียว',
+                    'เวลาที่เราเหงา ทะเลกับภูเขาจะโอบกอดเราไว้',
+                    'ข้างหลังนะเป็นเขา แต่ข้างหน้าเราอะเป็นเธอ',
+                    'ใกล้ไกลไม่สำคัญ… แค่มีคนไปด้วยกันก็พอ',
+                    'บางครั้ง..อุปสรรค​ของการเดินทาง อาจไม่ใช่สภาพอากาศ แต่เป็นสภาพจิตใจ',
+                    'ฉันยอมมีทรัพย์สินเพียงเล็กน้อย แล้วได้เห็นโลก ดีกว่าเป็นเจ้าของโลกทั้งโลก แต่ไม่เคยได้เห็นอะไรเลย',
+                    'บางทีเนื้อคู่เราอาจจะอยู่ประเทศอื่นก็ได้',
+                    'การเดินทางคือการมีชีวิตอยู่',
+                    'ชีวิตนั้นสั้น แต่โลกนี้กว้างนัก',
+                    'การเดินทางหลายพันกิโลเมตร เริ่มต้นด้วยก้าวเพียงก้าวเดียว',
+                    'ใช้ชีวิตของคุณด้วยเข็มทิศไม่ใช่นาฬิกา',
+                    'เธอชอบเขา แต่เรามันทะเล'
+                ];
+                $random_name = array_rand($title,1);
+                ?>
 
                 <form action="{{ route('form.upload_insert') }}" method="post" enctype="multipart/form-data">
                     @csrf
                     <div class="form-group">
                         <label for="">Name</label>
-                        <input type="text" name="name" class="form-control" value="{{ old('name') }}" required>
+                        <input type="text" name="name" class="form-control text-bold" value="{{ $title[$random_name] }}" required>
                     </div>
 
                     <div class="form-group">
@@ -76,7 +95,7 @@
                     </div>
 
                     <div class="text-right">
-                        <button type="reset" class="btn btn-danger" style="width: 100px;">reset</button>
+                        <!-- <button type="reset" class="btn btn-danger" style="width: 100px;">reset</button> -->
                         <button type="submit" class="btn btn-success" style="width: 100px;">save</button>
                     </div>
                 </form>

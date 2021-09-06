@@ -1,4 +1,11 @@
- <!-- Main Sidebar Container -->
+<?php
+
+use App\Models\CmsHelper as cms;
+
+?>
+
+
+<!-- Main Sidebar Container -->
  <aside class="main-sidebar sidebar-dark-primary elevation-4">
    <!-- Brand Logo -->
    <a href="{{ url('/') }}" class="brand-link">
@@ -31,16 +38,14 @@
          <li class="nav-item">
            <a href="{{ route('dashboard') }}" class="nav-link {{ active_route('dashboard') }}">
              <i class="nav-icon fas fa-tachometer-alt"></i>
-             <p>Dashboard
-               <span class="badge badge-info right">2</span>
-             </p>
+             <p>Dashboard</p>
            </a>
          </li>
 
          <li class="nav-item">
            <a href="{{ route('home2') }}" class="nav-link {{ active_route('home2') }}">
              <i class="nav-icon fas fa-home"></i>
-             <p>Home<span class="badge badge-info right">2</span></p>
+             <p>Home</p>
            </a>
          </li>
 
@@ -62,19 +67,19 @@
              <li class="nav-item">
                <a href="{{ route('form.upload') }}" class="nav-link {{ active_route('form.upload') }}">
                  <i class="nav-icon fas fa-file-alt"></i>
-                 <p>Form (Upload)</p>
+                 <p>Form (Upload) <span class="badge badge-warning right">{{ cms::CountFile() }}</span></p>
                </a>
              </li>
              <li class="nav-item">
                <a href="{{ route('form.image') }}" class="nav-link {{ active_route('form.image') }}">
                  <i class="nav-icon fas fa-file-alt"></i>
-                 <p>Form (Image)</p>
+                 <p>Form (Image) <span class="badge badge-info right">{{ cms::CountImg() }}</span></p>
                </a>
              </li>
              <li class="nav-item">
                <a href="{{ route('form.relate') }}" class="nav-link {{ active_route('form.relate') }}">
                  <i class="nav-icon fas fa-file-alt"></i>
-                 <p>Form (Relate)</p>
+                 <p>Form (Relate) <span class="badge badge-danger right">{{ cms::CountRelate() }}</span></p>
                </a>
              </li>
 

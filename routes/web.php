@@ -16,13 +16,19 @@ use App\Http\Controllers\HomeController;
 
 Auth::routes();
 
-Route::get('/index', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('index', [HomeController::class, 'index'])->name('home');
 Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 Route::get('home', function () {
     return view('home2');
 });
 
+Route::get('/district', function () {
+    return view("district/index");
+});
+
+
+// Clear cache
 Route::get('/clear-cache', function() {
     Artisan::call('view:clear');
     Artisan::call('cache:clear');
@@ -54,8 +60,10 @@ Route::group(['middleware' => ['auth']], function () {
 
     // Profile
     route::get('profile', [UserController::class, 'profile'])->name('profile');
-    route::post('profile/insert', [UserController::class, 'profile_insert'])->name('profile.insert');
+    route::post('profile/update', [UserController::class, 'profile_update'])->name('profile.update');
     Route::post('crop', [UserController::class, 'crop'])->name('crop');
+    Route::post('change_password', [UserController::class, 'change_password'])->name('change_password');
+    
 
     // Upload File =========================================================
     route::get('form/upload', [UserController::class, 'form_upload'])->name('form.upload');
@@ -73,8 +81,6 @@ Route::group(['middleware' => ['auth']], function () {
     route::get('form/relate', [UserController::class, 'form_relate'])->name('form.relate');
     route::post('form/relate/insert', [UserController::class, 'form_relate_insert'])->name('form.relate_insert');
 
-    // Upload File =========================================================
-    Route::get('upload/file', [HomeController::class, 'upload_file'])->name('upload.file');
-    Route::post('upload/file/insert', [HomeController::class, 'upload_file_insert'])->name('upload.file_insert');
-    Route::post('upload/file/delete', [HomeController::class, 'upload_file_delete'])->name('upload.file_delete');
+   
+
 });
