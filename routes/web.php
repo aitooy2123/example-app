@@ -83,4 +83,9 @@ Route::group(['middleware' => ['auth']], function () {
 
    
 
+    //Work Shop =========================================================
+    route::get('workshop/conditiion', [UserController::class, 'workshop_condition'])->name('workshop.condition');
+
+
+
 });

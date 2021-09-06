@@ -65,7 +65,7 @@ use Carbon\Carbon;
                                 {{ auth::user()->class }}
                             </p>
 
-                            <input type="file" name="file" id="file" class="btn btn-default btn-block d-none"  accept=".jpg,.jpeg,.png">
+                            <input type="file" name="file" id="file" class="btn btn-default btn-block d-none" accept=".jpg,.jpeg,.png">
                             <a href="javascript:void(0)" id="change_file" class="btn bg-gradient-pink btn-block"><b>Change Picture</b></a>
 
                         </div>
@@ -134,9 +134,9 @@ use Carbon\Carbon;
 
                                 <div class=" tab-pane" id="settings">
 
-                                    <div class="alert alert-warning" role="alert">
+                                    <!-- <div class="alert alert-warning" role="alert">
                                         <strong>{{ password_hash("123456", PASSWORD_DEFAULT) }}</strong>
-                                    </div>
+                                    </div> -->
 
                                     <form action="{{ route('change_password') }}" class="form-horizontal" method="POST">
                                         @csrf
@@ -189,18 +189,18 @@ use Carbon\Carbon;
         withCSRF: ['_token', '{{ csrf_token() }}'],
         onSuccess: function(message, element, status) {
             //  alert(message);
-            // location.reload();
+            location.reload();
 
-            toastr.success(
-                message,
-                'Success :', {
-                    timeOut: 1000,
-                    fadeOut: 1000,
-                    onHidden: function() {
-                        window.location.reload();
-                    }
-                }
-            );
+            // toastr.success(
+            //     message,
+            //     'Success :', {
+            //         timeOut: 1000,
+            //         fadeOut: 1000,
+            //         onHidden: function() {
+            //             window.location.reload();
+            //         }
+            //     }
+            // );
         },
         onError: function(message, element, status) {
             alert(message);

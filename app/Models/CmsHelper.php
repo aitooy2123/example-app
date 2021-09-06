@@ -138,7 +138,6 @@ class CmsHelper
       "name" => $query->name
     );
   }
-
   
   // ชื่อหน่วยงาน : วิธีใช้ cms::GetOrg(รหัสหน่วยงาน)
   public static function GetOrg($id)

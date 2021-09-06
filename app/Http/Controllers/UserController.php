@@ -389,14 +389,14 @@ class UserController extends Controller
             return response()->json(['status' => 0, 'msg' => 'Something went wrong, try again later']);
         }
     }
-
     public function change_password(Request $request)
     {
         // dd($request->Password, Hash::make($request->Password));
+
         $update = User::find(auth::user()->id);
         $update->password = Hash::make($request->Password);
        
-        if( $update->save()){
+        if($update->save()){
             return back()->with('Success','แก้ไขรหัสผ่านสำเร็จ');
         }else{
             return back()->with('Error','เปลี่ยนรหัสผ่านไม่สำเร็จ');
@@ -409,4 +409,12 @@ class UserController extends Controller
     {
         return view('contact');
     }
+
+    
+    // Work Shop -----------------------------------------------------S------------------------------
+    public function workshop_condition()
+    {
+        return view('workshop_condition');
+    }
+
 }
