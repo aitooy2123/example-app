@@ -7,6 +7,13 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Roles;
 
+use App\Models\Province;
+use App\Models\User;
+use App\Models\UploadFile;
+use App\Models\UploadImg;
+use App\Models\Relate;
+use App\Models\Organize;
+
 class CmsHelper
 {
   function __construct()
@@ -50,6 +57,7 @@ class CmsHelper
   public static function DateThai2Eng($strDate)
   {
     if (empty($strDate)) return false;
+    
     $array = [
       'มกราคม'   => '01',
       'กุมภาพันธ์'  => '02',

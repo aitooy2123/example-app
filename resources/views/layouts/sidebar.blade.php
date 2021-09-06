@@ -97,22 +97,17 @@ use App\Models\CmsHelper as cms;
 
         <li class="nav-header">WORKSHOP : Survey</li>
 
-        <li class="nav-item">
-          <a href="{{ route('workshop.condition') }}" class="nav-link">
-            <i class="nav-icon fab fa-cloudscale fa-spin"></i>
-            <p>เงื่อนไข</p>
-          </a>
-        </li>
+   
 
         <li class="nav-item">
-          <a href="" class="nav-link">
+          <a href="{{ route('workshop.form') }}" class="nav-link {{ active_route('workshop.form') }}">
             <i class="nav-icon far fa-file-alt"></i>
             <p>แบบฟอร์ม</p>
           </a>
         </li>
 
         <li class="nav-item">
-          <a href="" class="nav-link">
+          <a href="{{ route('workshop.list') }}" class="nav-link {{ active_route('workshop.list') }}">
             <i class="nav-icon far fa-list-alt"></i>
             <p>รายการ</p>
           </a>

@@ -29,12 +29,12 @@ Route::get('/district', function () {
 
 
 // Clear cache
-Route::get('/clear-cache', function() {
+Route::get('/clear-cache', function () {
     Artisan::call('view:clear');
     Artisan::call('cache:clear');
     Artisan::call('config:clear');
     Artisan::call('route:clear');
-    return back()->with('Clear','Clear Cache แล้ว');
+    return back()->with('Clear', 'Clear Cache แล้ว');
 });
 
 // --------------------------------------------------------------------------------------
@@ -63,29 +63,37 @@ Route::group(['middleware' => ['auth']], function () {
     route::post('profile/update', [UserController::class, 'profile_update'])->name('profile.update');
     Route::post('crop', [UserController::class, 'crop'])->name('crop');
     Route::post('change_password', [UserController::class, 'change_password'])->name('change_password');
-    
+
 
     // Upload File =========================================================
     route::get('form/upload', [UserController::class, 'form_upload'])->name('form.upload');
     route::post('form/upload/insert', [UserController::class, 'form_upload_insert'])->name('form.upload_insert');
-    route::get('form/upload/download/{id}',[UserController::class, 'form_upload_download'])->name('form.upload_download');
-    route::post('form/upload/delete',[UserController::class, 'form_upload_delete'])->name('form.upload_delete');
+    route::get('form/upload/download/{id}', [UserController::class, 'form_upload_download'])->name('form.upload_download');
+    route::post('form/upload/delete', [UserController::class, 'form_upload_delete'])->name('form.upload_delete');
 
     // Upload Image =========================================================
     route::get('form/image', [UserController::class, 'form_image'])->name('form.image');
     route::post('form/image/insert', [UserController::class, 'form_image_insert'])->name('form.image_insert');
-    route::get('form/image/download/{id}',[UserController::class, 'form_image_download'])->name('form.image_download');
-    route::post('form/image/delete',[UserController::class, 'form_image_delete'])->name('form.image_delete');
+    route::get('form/image/download/{id}', [UserController::class, 'form_image_download'])->name('form.image_download');
+    route::post('form/image/delete', [UserController::class, 'form_image_delete'])->name('form.image_delete');
 
     // API : Province Relate =========================================================
     route::get('form/relate', [UserController::class, 'form_relate'])->name('form.relate');
     route::post('form/relate/insert', [UserController::class, 'form_relate_insert'])->name('form.relate_insert');
 
-   
 
-    //Work Shop =========================================================
-    route::get('workshop/conditiion', [UserController::class, 'workshop_condition'])->name('workshop.condition');
+    // ==========================================================================
+    // Work Shop : Survey
+    // ==========================================================================
+    // route::get('workshop/conditiion', [UserController::class, 'workshop_condition'])->name('workshop.condition');
+
+    // form insert
+    route::get('workshop/form', [UserController::class, 'workshop_form'])->name('workshop.form');
+    route::post('workshop/form/insert', [UserController::class, 'workshop_form_insert'])->name('workshop.form_insert');
+
+    route::get('workshop/list', [UserController::class, 'workshop_list'])->name('workshop.list');
 
 
 
+    
 });

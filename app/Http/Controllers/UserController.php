@@ -9,6 +9,8 @@ use App\Models\UploadFile;
 use App\Models\UploadImg;
 use App\Models\Relate;
 use App\Models\Organize;
+use App\Models\Survey;
+use App\Models\SurveyImg;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\log;
@@ -18,9 +20,11 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Auth\Events\Validated;
 
 use Image;
 use Carbon\Carbon;
+use App\Models\CmsHelper as cms;
 
 class UserController extends Controller
 {
@@ -395,11 +399,11 @@ class UserController extends Controller
 
         $update = User::find(auth::user()->id);
         $update->password = Hash::make($request->Password);
-       
-        if($update->save()){
-            return back()->with('Success','แก้ไขรหัสผ่านสำเร็จ');
-        }else{
-            return back()->with('Error','เปลี่ยนรหัสผ่านไม่สำเร็จ');
+
+        if ($update->save()) {
+            return back()->with('Success', 'แก้ไขรหัสผ่านสำเร็จ');
+        } else {
+            return back()->with('Error', 'เปลี่ยนรหัสผ่านไม่สำเร็จ');
         }
     }
 
@@ -410,11 +414,34 @@ class UserController extends Controller
         return view('contact');
     }
 
-    
-    // Work Shop -----------------------------------------------------S------------------------------
+    // ================================================================================================
+    // Work Shop
+    // ================================================================================================
     public function workshop_condition()
     {
         return view('workshop_condition');
     }
 
+
+    // form 
+    public function workshop_form(Request $request)
+    {
+        return view('workshop_form');
+    }
+    public function workshop_form_insert(Request $request)
+    {
+
+        
+    }
+
+
+
+
+    public function workshop_list(Request $request)
+    {
+        $survey = Survey::all();
+        return view('workshop_list',[
+            "survey" => $survey
+        ]);
+    }
 }
