@@ -10,6 +10,8 @@ use App\Models\CmsHelper as cms;
 @section('custom-css-script')
 <link rel="stylesheet" href="{{ asset('plugins/datepicker-thai/css/bootstrap-datepicker.css') }}">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css" />
+<link rel="stylesheet" href="{{ asset('plugins/summernote/summernote-bs4.min.css') }}">
+
 @endsection
 
 @section('custom-css')
@@ -123,7 +125,7 @@ use App\Models\CmsHelper as cms;
                         <div class="col-lg-4 col-md-4 col-sm-12">
                             <div class="form-group">
                                 <label for="">อำเภอ</label>
-                                <select id="input_amphoe1" class="form-control custom-select select2bs4" onchange="showDistricts()"  disabled>
+                                <select id="input_amphoe1" class="form-control custom-select select2bs4" onchange="showDistricts()" disabled>
                                     <option value="{{ $Edit->amphoe }}">{{ cms::GetAmphoe($Edit->amphoe) }}</option>
                                 </select>
                             </div>
@@ -132,7 +134,7 @@ use App\Models\CmsHelper as cms;
                         <div class="col-lg-4 col-md-4 col-sm-12">
                             <div class="form-group">
                                 <label for="">ตำบล</label>
-                                <select id="input_district1"  class="form-control custom-select select2bs4" onchange="showZipcode()" disabled>
+                                <select id="input_district1" class="form-control custom-select select2bs4" onchange="showZipcode()" disabled>
                                     <option value="{{ $Edit->tumbon }}">{{ cms::GetTumbon($Edit->tumbon) }}</option>
                                 </select>
                             </div>
@@ -151,6 +153,20 @@ use App\Models\CmsHelper as cms;
                                 <input name="tel" class="form-control" value="{{ $Edit->tel }}" placeholder="หมายเลขโทรศัพท์" maxlength="10" />
                             </div>
                         </div>
+
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label>Text Editor</label>
+                                <textarea id="summernote" name="summernote">{{ $Edit->summernote }}</textarea>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="form-group">
+                                {!! $Edit->summernote !!}
+                            </div>
+                        </div>
+
 
                         <div class="col-12">
                             <div class="card">
@@ -175,7 +191,7 @@ use App\Models\CmsHelper as cms;
                             <tr>
                                 <td>
                                     <a href="{{ asset('uploads/survey/'.$val->img_name) }}" data-fancybox="gallery" data-caption="Optional caption">
-                                        <img src="{{ asset('uploads/survey/'.$val->img_name) }}" class="img-thumbnail" style="width: 100px;height:100px">
+                                        <img src="{{ asset('uploads/survey/'.$val->img_name) }}" class="img-thumbnail" style="width: 100px;height:100px;object-fit: cover;">
                                     </a>
                                 </td>
                                 <td>
@@ -187,7 +203,7 @@ use App\Models\CmsHelper as cms;
 
                                     <a href="{{ route('workshop.detail_delete_img',[
                                         'id'=>$val->id,
-                                        'img_nmae'=>$val->img_name
+                                        'img_name'=>$val->img_name
                                         ]) }}" class="btn btn-danger">
                                         <i class="fa fa-trash" aria-hidden="true"></i>
                                     </a>
@@ -218,7 +234,7 @@ use App\Models\CmsHelper as cms;
 <script src="{{ asset('plugins/datepicker-thai/js/locales/bootstrap-datepicker.th.min.js') }}" charset="UTF-8"></script>
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
-
+<script src="{{ asset('plugins/summernote/summernote-bs4.min.js') }}"></script>
 @endsection
 
 @section('custom-js')
@@ -348,4 +364,12 @@ use App\Models\CmsHelper as cms;
     })
 </script>
 @endif
+
+<script>
+    $('#summernote').summernote({
+        placeholder: 'ทดสอบ Summernote ',
+        tabsize: 2,
+        height: 200
+    });
+</script>
 @endsection

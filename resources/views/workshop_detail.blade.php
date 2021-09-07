@@ -13,6 +13,15 @@ use App\Models\CmsHelper as cms;
 @endsection
 
 @section('custom-css')
+<style>
+    .thumb-post img {
+  object-fit: none; /* Do not scale the image */
+  object-position: center; /* Center the image within the element */
+  width: 100%;
+  max-height: 250px;
+  margin-bottom: 1rem;
+}
+</style>
 @endsection
 
 @section('content')
@@ -84,10 +93,12 @@ use App\Models\CmsHelper as cms;
                 <div class="row">
 
                     @foreach($img as $val)
-                    <div class="col-sm-12 col-md-6 col-lg-4">
-                        <a href="{{ asset('uploads/survey/'.$val->img_name) }}" data-fancybox="gallery" data-caption="Optional caption">
-                            <img src="{{ asset('uploads/survey/'.$val->img_name) }}" alt="" class=" img-thumbnail img-fluid w-100" style="height: 300px;">
-                        </a>
+                    <div class="col-sm-12 col-md-4 col-lg-2">
+                        <div class="form-group" >
+                            <a href="{{ asset('uploads/survey/'.$val->img_name) }}" data-fancybox="gallery" data-caption="{{ $val->img_name }}">
+                                <img src="{{ asset('uploads/survey/'.$val->img_name) }}" class=" img-thumbnail img-fluid m" style="width: 200px; height: 200px; object-fit: cover;">
+                            </a>
+                        </div>
                     </div>
                     @endforeach
 

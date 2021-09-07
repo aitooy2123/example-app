@@ -139,7 +139,7 @@ use Illuminate\Support\Facades\Storage;
                                 <img src="{{ asset('dist/img/user2-160x160.jpg') }}" class="img-thumbnail" width="100px" style="opacity: 0.4;">
                                 @else
                                 <a href="{{ asset('uploads/images/'.$val->img_path1) }}" data-toggle="lightbox" data-title="{{ $val->img_name }}">
-                                    <img src="{{ asset('uploads/images/thumbnail/'.$val->img_path1) }}" class="img-thumbnail" width="100px">
+                                    <img src="{{ asset('uploads/images/thumbnail/'.$val->img_path1) }}" class="img-thumbnail" style="width: 100px;height:100px;object-fit: cover;">
                                 </a>
                                 @endif
 

@@ -3,6 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Hash;
+
 use App\Models\Province;
 use App\Models\User;
 use App\Models\UploadFile;
@@ -11,21 +19,10 @@ use App\Models\Relate;
 use App\Models\Organize;
 use App\Models\Survey;
 use App\Models\SurveyImg;
-
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\log;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Auth\Events\Validated;
-use Intervention\Image\ImageManagerStatic as Image;
-
-// use Image;
-use Carbon\Carbon;
 use App\Models\CmsHelper as cms;
+
+use Image;
+use Carbon\Carbon;
 
 class UserController extends Controller
 {
@@ -395,10 +392,6 @@ class UserController extends Controller
             return response()->json(['status' => 0, 'msg' => 'Something went wrong, try again later']);
         }
     }
-
-
-
-
     public function change_password(Request $request)
     {
         // dd($request->Password, Hash::make($request->Password));
@@ -423,11 +416,6 @@ class UserController extends Controller
     // ================================================================================================
     // Work Shop
     // ================================================================================================
-    public function workshop_condition()
-    {
-        return view('workshop_condition');
-    }
-
 
     // form 
     public function workshop_form(Request $request)
@@ -436,7 +424,6 @@ class UserController extends Controller
     }
     public function workshop_form_insert(Request $request)
     {
-        // dd($request);
         $insert = new Survey();
         $insert->date = cms::DateThai2Eng($request->date);
         $insert->store_name = $request->store_name;
@@ -449,6 +436,7 @@ class UserController extends Controller
         $insert->tumbon = $request->tumbon;
         $insert->zipcode = $request->zipcode;
         $insert->tel = $request->tel;
+        $insert->summernote = $request->summernote;
         $insert->save();
 
         if ($request->hasFile('image')) {
@@ -461,7 +449,6 @@ class UserController extends Controller
 
                 $width = Image::make($path)->width();
                 $height = Image::make($path)->height();
-                // dd($width,$height);
 
                 if ($width > $height) {
                     Image::make($path)->resize(1028, null, function ($constraint) {
@@ -489,9 +476,8 @@ class UserController extends Controller
     }
     public function workshop_form_edit(Request $request)
     {
-        $Edit = Survey::find($request->id)->first();
+        $Edit = Survey::where('id', $request->id)->first();
         $Img = SurveyImg::where('survey_id', $request->id)->get();
-
         return view('workshop_form_edit', [
             'Edit' => $Edit,
             'Img' => $Img
@@ -513,26 +499,22 @@ class UserController extends Controller
         // $insert->zipcode = $request->zipcode;
         $insert->tel = $request->tel;
 
-
         if ($request->hasFile('image')) {
 
             $images = $request->file('image');
-
             foreach ($images as $image) {
                 $rename = Carbon::now()->year + 543 . '_' . date('mdHis') . '_' . rand(111, 999) . '.' . $image->extension();
                 $path = $image->move(public_path('uploads/survey/'), $rename);
 
                 $width = Image::make($path)->width();
                 $height = Image::make($path)->height();
-                // dd($width,$height);
-
                 if ($width > $height) {
-                    Image::make($path)->resize(1028, null, function ($constraint) {
-                        $constraint->aspectRatio();
+                    Image::make($path)->widen(1028, null, function ($constraint) {
+                        $constraint->upsize();
                     })->save(public_path('uploads/survey/' . $rename));
                 } else {
-                    Image::make($path)->resize(null, 720, function ($constraint) {
-                        $constraint->aspectRatio();
+                    Image::make($path)->heighten(null, 720, function ($constraint) {
+                        $constraint->upsize();
                     })->save(public_path('uploads/survey/' . $rename));
                 }
 
@@ -552,41 +534,29 @@ class UserController extends Controller
     }
     public function workshop_form_delete(Request $request)
     {
-        // dd($request);
-        $img = SurveyImg::where('survey_id', $request->id)->get();
-        foreach ($img as $val) {
+        $CheckImg = SurveyImg::where('survey_id', $request->id)->get();
+        foreach ($CheckImg as $val) {
             File::delete('uploads/survey/' . $val->img_name);
         }
 
-        $delete_img = SurveyImg::where('survey_id', $request->id)->delete();
-        $delete_record = Survey::where('id', $request->id)->delete();
+        $DelSurveyImg = SurveyImg::where('survey_id', $request->id)->delete();
+        $DelSurvey = Survey::where('id', $request->id)->delete();
 
-        if ($delete_record) {
+        if ($DelSurvey) {
             return back()->with('Success', 'ลบไฟล์สำเร็จ');
         } else {
             return back()->withInput()->with('Error', 'ลบไฟล์ไม่สำเร้จ');
         }
     }
-
-
-
     public function workshop_list(Request $request)
     {
-        $survey = Survey::select(
-            'tbl_survey.*',
-            'tbl_survey_img.*',
-            'tbl_survey_img.id as img_id'
-        )
-            ->join('tbl_survey_img', 'tbl_survey.id', '=', 'tbl_survey_img.survey_id')
-            ->groupBy('tbl_survey.id')
-            ->get();
-
-
+        $survey = Survey::get();
         return view('workshop_list', [
             "survey" => $survey
         ]);
     }
 
+    // Detail
     public function workshop_detail(Request $request)
     {
         $survey = Survey::where('id', $request->id)->first();
@@ -598,11 +568,8 @@ class UserController extends Controller
     }
     public function workshop_detail_delete_img(Request $request)
     {
-        // dd($request);
         File::delete('uploads/survey/' . $request->img_name);
-
         $delete = SurveyImg::where('id', $request->id)->delete();
-
         if ($delete) {
             return back()->with('Success', 'ลบไฟล์สำเร็จ');
         } else {

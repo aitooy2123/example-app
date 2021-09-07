@@ -73,18 +73,18 @@ use App\Models\CmsHelper as cms;
                     <tbody>
                         @foreach($survey as $val)
                         <tr>
-                            <td class="text-center">{{ $val->survey_id}}</td>
+                            <td class="text-center">{{ $val->id}}</td>
                             <td class="">{{ $val->store_name}}</td>
                             <td>{{ cms::GetTumbon($val->tumbon) }}</td>
                             <td>{{ cms::GetAmphoe($val->amphoe) }}</td>
                             <td>{{ cms::GetProvince($val->province) }}</td>
                             <td class="text-nowrap text-center">
-                                <a href="{{ route('workshop.detail',['id'=>$val->survey_id]) }}" class="btn btn-info btn-sm" data-toggle="tooltip" title="ดู"><i class="fas fa-eye"></i></a>
-                                <a href="{{ route('workshop.form_edit',['id'=>$val->survey_id]) }}" class="btn btn-warning btn-sm" data-toggle="tooltip" title="แก้ไข"><i class="fas fa-edit"></i></a>
+                                <a href="{{ route('workshop.detail',['id'=>$val->id]) }}" class="btn btn-info btn-sm" data-toggle="tooltip" title="ดู"><i class="fas fa-eye"></i></a>
+                                <a href="{{ route('workshop.form_edit',['id'=>$val->id]) }}" class="btn btn-warning btn-sm" data-toggle="tooltip" title="แก้ไข"><i class="fas fa-edit"></i></a>
 
                                 <form action="{{ route('workshop.form_delete') }}" method="post" class="d-inline">
                                     @csrf
-                                    <input type="hidden" value="{{ $val->survey_id }}" name="id">
+                                    <input type="hidden" value="{{ $val->id }}" name="id">
                                     <input type="hidden" value="{{ $val->img_name }}" name="img_name">
                                     <button type="submit" class="btn btn-danger btn-sm" data-toggle="tooltip" title="ลบ"><i class="fas fa-trash-alt"></i></button>
                                 </form>
