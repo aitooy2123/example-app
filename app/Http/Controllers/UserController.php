@@ -364,6 +364,7 @@ class UserController extends Controller
         // dd($request);
         $update = User::find(auth::user()->id);
         $update->name = $request->name;
+        $update->class = $request->class;
         $update->save();
 
         if ($update->save()) {

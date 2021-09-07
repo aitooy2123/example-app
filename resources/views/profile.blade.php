@@ -109,15 +109,16 @@ use Carbon\Carbon;
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label for="inputExperience" class="col-sm-2 col-form-label">Experience</label>
+                                            <label for="inputExperience" class="col-sm-2 col-form-label">Class</label>
                                             <div class="col-sm-10">
-                                                <textarea class="form-control" id="inputExperience" placeholder="Experience"></textarea>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label for="inputSkills" class="col-sm-2 col-form-label">Skills</label>
-                                            <div class="col-sm-10">
-                                                <input type="text" class="form-control" id="inputSkills" placeholder="Skills">
+                                                <select name="class" class="form-control select2">
+                                                    <option disabled="disabled">{{ auth::user()->class }}</option>
+                                                    <optgroup label="โปรดเลือก">
+                                                        <option value="User">User</option>
+                                                        <option value="Admin">Admin</option>
+                                                    </optgroup>
+
+                                                </select>
                                             </div>
                                         </div>
 
