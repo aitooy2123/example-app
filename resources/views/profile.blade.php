@@ -112,7 +112,7 @@ use Carbon\Carbon;
                                             <label for="inputExperience" class="col-sm-2 col-form-label">Class</label>
                                             <div class="col-sm-10">
                                                 <select name="class" class="form-control select2">
-                                                    <option disabled="disabled">{{ auth::user()->class }}</option>
+                                                    <option disabled="disabled" selected>{{ auth::user()->class }}</option>
                                                     <optgroup label="โปรดเลือก">
                                                         <option value="User">User</option>
                                                         <option value="Admin">Admin</option>

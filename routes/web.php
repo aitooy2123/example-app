@@ -65,7 +65,10 @@ Route::group(['middleware' => ['auth']], function () {
     route::post('form/upload/insert', [UserController::class, 'form_upload_insert'])->name('form.upload_insert');
     route::get('form/upload/download/{id}', [UserController::class, 'form_upload_download'])->name('form.upload_download');
     route::post('form/upload/delete', [UserController::class, 'form_upload_delete'])->name('form.upload_delete');
+    route::get('form/upload/truncate', [UserController::class, 'form_upload_truncate'])->name('form.upload_truncate');
 
+
+    
     // Upload Image =========================================================
     route::get('form/image', [UserController::class, 'form_image'])->name('form.image');
     route::post('form/image/insert', [UserController::class, 'form_image_insert'])->name('form.image_insert');
@@ -97,4 +100,7 @@ Route::group(['middleware' => ['auth']], function () {
     // Detail
     route::get('workshop/detail/{id}', [UserController::class, 'workshop_detail'])->name('workshop.detail');
     route::get('workshop/detail/delete/img/', [UserController::class, 'workshop_detail_delete_img'])->name('workshop.detail_delete_img');
+
+    route::get('truncate', [UserController::class, 'truncate'])->name('truncate');
+
 });

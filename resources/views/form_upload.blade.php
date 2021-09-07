@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
 <link rel="stylesheet" href="{{ asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
 <link rel="stylesheet" href="{{ asset('plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css" />
 @endsection
 
 @section('custom-css')
@@ -76,7 +77,7 @@
                     'ใช้ชีวิตของคุณด้วยเข็มทิศไม่ใช่นาฬิกา',
                     'เธอชอบเขา แต่เรามันทะเล'
                 ];
-                $random_name = array_rand($title,1);
+                $random_name = array_rand($title, 1);
                 ?>
 
                 <form action="{{ route('form.upload_insert') }}" method="post" enctype="multipart/form-data">
@@ -89,7 +90,7 @@
                     <div class="form-group">
                         <label for="">File</label> (<span class="text-red text-bold">doc,docx,xls,xlsx,pdf ไม่เกิน 2MB</span>)
                         <div class="custom-file">
-                            <input type="file" id="customFile" name="file" class="custom-file-input" value="{{ old('file') }}" accept=".doc,.docx,.xls,.xlsx,.pdf">
+                            <input type="file" id="customFile" name="file" class="custom-file-input" value="{{ old('file') }}" accept=".doc,.docx,.xls,.xlsx,.pdf" required>
                             <label class="custom-file-label" for="customFile">Choose file</label>
                         </div>
                     </div>
@@ -103,17 +104,25 @@
             </div>
     </section>
 
+    <!-- <section class="content">
+        <div class="form-group">
+            <div class="text-right">
+                <a href="{{ route('form.upload_truncate') }}" class="btn btn-danger"><i class="fas fa-exclamation-triangle"></i> ลบข้อมูลทั้งหมด</a>
+            </div>
+        </div>
+    </section> -->
 
     <section class="content">
         <div class="card card-outline card-info">
             <!-- <div class="card-header">รายละเอียด</div> -->
             <div class="card-body">
 
-                <table id="example1" class="table table-striped table-sm">
+                <table id="example1" class="table table-striped table-sm table-bordered">
                     <thead class="bg-gradient-gray">
                         <tr>
-                            <th width="10%">ID</th>
+                            <th width="1%">ID</th>
                             <th>Filename</th>
+                            <th>Type</th>
                             <th width="20%">Download</th>
                         </tr>
                     </thead>
@@ -121,18 +130,25 @@
 
                         @foreach($file as $val)
                         <tr>
-                            <td>{{ $val->id }}</td>
+                            <td class="text-center">{{ $val->id }}</td>
                             <td>{{ $val->file_name }}</td>
-                            <td class="text-nowrap">
-                                <a href="{{ asset('uploads/files/'.$val->file_path1 ) }}" class="btn btn-sm btn-info" data-toggle="tooltip" title="Public"><i class="fas fa-download"></i></a>
-                                <a href="{{ route('form.upload_download',['id'=>$val->id]) }}" class="btn btn-sm btn-primary" data-toggle="tooltip" title="Stroage"><i class="fas fa-download"></i></a>
+                            <td class="text-center">
 
+                                @if($val->file_type=='pdf') <i class="fas fa-file-pdf fa-2x text-red"></i>
+                                @elseif($val->file_type=='doc' || $val->file_type=='docx') <i class="fas fa-file-word fa-2x text-blue"></i>
+                                @elseif($val->file_type=='xls' || $val->file_type=='xlsx') <i class="fas fa-file-excel fa-2x text-green"></i>
+                                @endif
+                                <!-- {{ $val->file_type }} -->
+                            </td>
+                            <td class="text-nowrap text-center">
+                                <a href="{{ asset('uploads/files/'.$val->file_path1 ) }}" class="btn btn-sm btn-primary" data-toggle="tooltip" title="Public"><i class="fas fa-download"></i></a>
+                                <a href="{{ route('form.upload_download',['id'=>$val->id]) }}" class="btn btn-sm btn-info" data-toggle="tooltip" title="Stroage" style="width: 33px;"><i class="fas fa-download"></i></a>
                                 <form action="{{ route('form.upload_delete') }}" method="POST" class="d-inline">
                                     @csrf
                                     <input type="hidden" name="id" value="{{ $val->id }}">
                                     <input type="hidden" name="path1" value="{{ $val->file_path1 }}">
                                     <input type="hidden" name="path2" value="{{ $val->file_path2 }}">
-                                    <button type="submit" class="btn btn-sm btn-danger" data-toggle="tooltip" title="Delete"><i class="fas fa-trash-alt"></i></button>
+                                    <button type="submit" class="btn btn-sm btn-danger" data-toggle="tooltip" title="Delete" style="width: 33px;"><i class="fas fa-trash-alt"></i></button>
                                 </form>
 
                             </td>
@@ -168,15 +184,15 @@
 <script src="{{ asset('plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
 <!-- bs-custom-file-input -->
-<script src="{{ asset('plugins/bs-custom-file-input/bs-custom-file-input.min.js') }}""></script>
+<script src="{{ asset('plugins/bs-custom-file-input/bs-custom-file-input.min.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
 @endsection
 
 @section('custom-js')
 <script>
     $(function() {
-        $("#example1").DataTable({
+        $(" #example1").DataTable({
             "oLanguage": {
-                // "url": "https://cdn.datatables.net/plug-ins/1.10.22/i18n/Thai.json",
                 "sEmptyTable": "ไม่มีข้อมูลในตาราง",
                 "sInfo": "แสดง _START_ ถึง _END_ จาก _TOTAL_ แถว",
                 "sInfoEmpty": "แสดง 0 ถึง 0 จาก 0 แถว",
@@ -198,18 +214,16 @@
                     "sSortDescending": ": เปิดใช้งานการเรียงข้อมูลจากมากไปน้อย"
                 }
             },
+            "order": ['0', 'DESC'],
             "responsive": true,
             "lengthChange": false,
             "autoWidth": false,
             "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
         }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
     });
-
     $(function() {
-        $('[data-toggle="tooltip"]').tooltip()
-    })
+        $('[data-toggle="tooltip" ]').tooltip()
 
-    $(function() {
         bsCustomFileInput.init();
     });
 </script>

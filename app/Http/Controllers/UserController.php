@@ -201,10 +201,16 @@ class UserController extends Controller
         $public_path = $request->file->move(public_path('uploads/files/'), $filename); // Public
 
         //Insert =======================================================================================
+        $file_type = $request->file->getClientOriginalExtension();
+        $file_size = File::size($public_path);
+
+        // dd($file_size);
+
         $insert = new UploadFile;
         $insert->file_name = $request->name;
         $insert->file_path1 = $filename;
         $insert->file_path2 = $storage_path;
+        $insert->file_type = $file_type;
 
         if ($insert->save()) {
             return back()->with('Success', 'อัพโหลดไฟล์สำเร็จ');
@@ -228,6 +234,14 @@ class UserController extends Controller
         } else {
             return back()->withInput()->with('Error', 'ลบไฟล์ไม่สำเร้จ');
         }
+    }
+
+    public function form_upload_truncate()
+    {
+        File::cleanDirectory('uploads/files/');
+        Storage::delete(Storage::allFiles('files/'));
+        UploadFile::truncate();
+        return back()->with('Success', 'ข้อมูล/ไฟล์ ทั้งหมดถูกล้าง');
     }
 
     // Upload Image -----------------------------------------------------------------------------------
@@ -480,6 +494,11 @@ class UserController extends Controller
     {
         $Edit = Survey::where('id', $request->id)->first();
         $Img = SurveyImg::where('survey_id', $request->id)->get();
+
+        if(empty($Edit)){
+            return back();
+        }
+
         return view('workshop_form_edit', [
             'Edit' => $Edit,
             'Img' => $Img
@@ -564,6 +583,11 @@ class UserController extends Controller
     {
         $survey = Survey::where('id', $request->id)->first();
         $img = SurveyImg::where('survey_id', $request->id)->get();
+
+        if(empty($survey)){
+            return back();
+        }
+
         return view('workshop_detail', [
             "survey" => $survey,
             "img" => $img
@@ -578,5 +602,26 @@ class UserController extends Controller
         } else {
             return back()->withInput()->with('Error', 'ลบไฟล์ไม่สำเร้จ');
         }
+    }
+
+    public function truncate()
+    {
+        File::cleanDirectory('uploads/');
+        // File::cleanDirectory('uploads/files/');
+        // File::cleanDirectory('uploads/images/');
+        // File::cleanDirectory('uploads/survey/');
+
+        Storage::delete(Storage::allFiles('files/'));
+        Storage::delete(Storage::allFiles('images/'));
+
+        UploadFile::truncate();
+        UploadImg::truncate();
+        Relate::truncate();
+        Survey::truncate();
+        SurveyImg::truncate();
+
+        User::where('avatar','!=',NULL)->update(['avatar'=> NULL]);
+
+        return redirect()->back()->with('Truncate', 'ข้อมูล/ไฟล์ ทั้งหมดถูกล้าง');
     }
 }

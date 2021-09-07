@@ -15,12 +15,14 @@ use App\Models\CmsHelper as cms;
 @section('custom-css')
 <style>
     .thumb-post img {
-  object-fit: none; /* Do not scale the image */
-  object-position: center; /* Center the image within the element */
-  width: 100%;
-  max-height: 250px;
-  margin-bottom: 1rem;
-}
+        object-fit: none;
+        /* Do not scale the image */
+        object-position: center;
+        /* Center the image within the element */
+        width: 100%;
+        max-height: 250px;
+        margin-bottom: 1rem;
+    }
 </style>
 @endsection
 
@@ -94,7 +96,7 @@ use App\Models\CmsHelper as cms;
 
                     @foreach($img as $val)
                     <div class="col-sm-12 col-md-4 col-lg-2">
-                        <div class="form-group" >
+                        <div class="form-group">
                             <a href="{{ asset('uploads/survey/'.$val->img_name) }}" data-fancybox="gallery" data-caption="{{ $val->img_name }}">
                                 <img src="{{ asset('uploads/survey/'.$val->img_name) }}" class=" img-thumbnail img-fluid m" style="width: 200px; height: 200px; object-fit: cover;">
                             </a>
@@ -107,8 +109,9 @@ use App\Models\CmsHelper as cms;
 
             </div>
             <!-- /.card-body -->
-            <div class="card-footer">
-                Footer
+            <div class="card-footer text-right">
+                <a href="{{ route('workshop.list') }}" class="btn btn-danger" style="width:100px">ย้อนกลับ</a>
+
             </div>
             <!-- /.card-footer-->
         </div>

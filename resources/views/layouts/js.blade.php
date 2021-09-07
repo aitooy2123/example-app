@@ -13,9 +13,13 @@
 
 <script src="{{ asset('plugins/toastr/toastr.min.js') }}"></script>
 
-@if (Session::get('Clear'))
+@if ($msg = Session::get('Clear') )
 <script>
-    toastr.success('Clear Cache Successfully !!');
+    toastr.success('{{ $msg }}');
+</script>
+@elseif ($msg = Session::get('Truncate') )
+<script>
+    toastr.success('{{ $msg }}');
 </script>
 @endif
 

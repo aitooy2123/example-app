@@ -6,7 +6,7 @@ use App\Models\CmsHelper as cms;
 
 @extends('layouts.master')
 
-@php $header='ฟอร์มสำรวจ'; @endphp
+@php $header='รายการสำรวจ'; @endphp
 @section('title',$header)
 
 @section('custom-css-script')
