@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\CmsHelper as cms;
-
+use Illuminate\Support\Facades\Auth;
 ?>
 
 
@@ -32,6 +32,8 @@ use App\Models\CmsHelper as cms;
       <ul class="nav nav-pills nav-sidebar flex-column  nav-compact nav-flat nav-legacy nav-child-indent nav-collapse-hide-child" data-widget="treeview" role="menu" data-accordion="false">
         <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
+
+        @if(auth::user()->class=='Admin')
 
         <li class="nav-header">EXAMPLES</li>
 
@@ -93,11 +95,14 @@ use App\Models\CmsHelper as cms;
           </a>
         </li>
 
+        @endif
+
+
 
 
         <li class="nav-header">WORKSHOP : Survey</li>
 
-   
+
 
         <li class="nav-item">
           <a href="{{ route('workshop.form') }}" class="nav-link {{ active_route('workshop.form') }}">

@@ -38,17 +38,13 @@
         <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
           <!-- User image -->
           <li class="user-header bg-primary">
-            <img 
-
-            @if(empty(Auth::user()->avatar)) src="{{ asset('dist/img/avatar4.png') }}"
-            @else src="{{ asset('uploads/avatar/'.Auth::user()->avatar) }}"
-            @endif
             
-            class="img-circle elevation-2" alt="User Image">
-
-            <p>
-            {{ Auth::user()->name }}
-              <small>{{ Auth::user()->created_at }}</small>
+            @if(empty(Auth::user()->avatar)) <img  src="{{ asset('dist/img/avatar4.png') }}" class="img-circle elevation-2" alt="User Image">
+            @else <img  src="{{ asset('uploads/avatar/'.Auth::user()->avatar) }}" class="img-circle elevation-2" alt="User Image">
+            @endif
+      
+            <p>{{ Auth::user()->name }}
+              <small>{{ Auth::user()->class }}</small>
             </p>
           </li>
           <!-- Menu Body -->
