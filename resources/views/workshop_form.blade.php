@@ -47,7 +47,6 @@ use App\Models\CmsHelper as cms;
         background: #f3f2f1;    
     }
 
-
     .IMGthumbnail {
         max-width: 168px;
         height: 220px;
@@ -63,7 +62,6 @@ use App\Models\CmsHelper as cms;
     }
 
     .imgThumbContainer {
-
         margin: 4px;
         border: solid;
         display: inline-block;
@@ -73,8 +71,6 @@ use App\Models\CmsHelper as cms;
         -webkit-box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.2);
         box-shadow: 0 0 4px 0 rgba(0, 0, 0, .2);
     }
-
-
 
     .imgThumbContainer>.imgName {
         text-align: center;
