@@ -236,6 +236,7 @@ return [
         'Active' => Pyaesone17\ActiveState\ActiveFacade::class,
         // 'Socialite' => Laravel\Socialite\Facades\Socialite::class,
         'Image' => Intervention\Image\Facades\Image::class,
+        // 'Image' => Intervention\Image\ImageManagerStatic::class,
     ],
 
 ];

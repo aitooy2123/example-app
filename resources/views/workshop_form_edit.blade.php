@@ -4,12 +4,12 @@ use App\Models\CmsHelper as cms;
 ?>
 @extends('layouts.master')
 
-@php $header='ฟอร์มสำรวจ'; @endphp
+@php $header='แก้ไขฟอร์มสำรวจ'; @endphp
 @section('title',$header)
 
 @section('custom-css-script')
 <link rel="stylesheet" href="{{ asset('plugins/datepicker-thai/css/bootstrap-datepicker.css') }}">
-<!-- <link href="//getbootstrap.com/2.3.2/assets/js/google-code-prettify/prettify.css" rel="stylesheet"> -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css" />
 @endsection
 
 @section('custom-css')
@@ -27,7 +27,7 @@ use App\Models\CmsHelper as cms;
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <!-- <li class="breadcrumb-item"><a href="#">{{ $header }}</a></li> -->
+                        <li class="breadcrumb-item"><a href="{{ route('workshop.list') }}">รายการ</a></li>
                         <li class="breadcrumb-item active">{{ $header }}</li>
                     </ol>
                 </div>
@@ -40,7 +40,7 @@ use App\Models\CmsHelper as cms;
 
         <!-- Default box -->
         <div class="card">
-            <div class="card-header bg-gradient-info">
+            <div class="card-header bg-gradient-warning">
                 <h3 class="card-title">{{ $header }}</h3>
 
                 <div class="card-tools">
@@ -55,8 +55,10 @@ use App\Models\CmsHelper as cms;
             <div class="card-body">
 
 
-                <form action="{{ route('workshop.form_insert') }}" method="post" enctype="multipart/form-data">
+                <form action="{{ route('workshop.form_update') }}" method="post" enctype="multipart/form-data">
                     @csrf
+
+                    <input type="hidden" value="{{ $Edit->id }}" name="id">
 
                     <div class="row">
 
@@ -65,9 +67,7 @@ use App\Models\CmsHelper as cms;
                             <div class="form-group">
                                 <label>วันที่บันทึก</label>
                                 <div class="input-group date" id="reservationdate" data-target-input="nearest">
-                                <!-- <input class="input-medium form-control datepicker" type="text" name="date" data-provide="datepicker" data-date-language="th-th"> -->
-
-                                    <input type="text" name="date"  class="form-control datepicker" data-target="#reservationdate" readonly>
+                                    <input type="text" name="date" value="{{ cms::DateThai($Edit->date)['dMY'] }}" class="form-control datepicker" data-target="#reservationdate" readonly>
                                     <div class="input-group-append" id="btn_date" data-target="#reservationdate" data-toggle="datetimepicker">
                                         <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                     </div>
@@ -79,43 +79,43 @@ use App\Models\CmsHelper as cms;
                         <div class="col-12">
                             <div class="form-group">
                                 <label for="">ชื่อสถานที่</label>
-                                <input type="text" class="form-control" name="store_name" placeholder="ชื่อสถานที่" required>
+                                <input type="text" class="form-control" name="store_name" placeholder="ชื่อสถานที่" value="{{ $Edit->store_name }}" required>
                             </div>
                         </div>
 
                         <div class="col-lg-4 col-md-4 col-sm-12">
                             <div class="form-group">
                                 <label for="">เลขที่</label>
-                                <input type="text" class="form-control" name="store_no" placeholder="เลขที่">
+                                <input type="text" class="form-control" name="store_no" placeholder="เลขที่" value="{{ $Edit->store_no }}">
                             </div>
                         </div>
 
                         <div class="col-lg-4 col-md-4 col-sm-12">
                             <div class="form-group">
                                 <label for="">หมู่ที่</label>
-                                <input type="text" class="form-control" name="store_moo" placeholder="หมู่ที่">
+                                <input type="text" class="form-control" name="store_moo" placeholder="หมู่ที่" value="{{ $Edit->store_moo }}">
                             </div>
                         </div>
 
                         <div class="col-lg-4 col-md-4 col-sm-12">
                             <div class="form-group">
                                 <label for="">ตรอก/ซอย</label>
-                                <input type="text" class="form-control" name="store_soi" placeholder="ตรอก/ซอย">
+                                <input type="text" class="form-control" name="store_soi" placeholder="ตรอก/ซอย" value="{{ $Edit->store_soi }}">
                             </div>
                         </div>
 
                         <div class="col-lg-4 col-md-4 col-sm-12">
                             <div class="form-group">
                                 <label for="">ถนน</label>
-                                <input type="text" class="form-control" name="store_road" placeholder="ถนน">
+                                <input type="text" class="form-control" name="store_road" placeholder="ถนน" value="{{ $Edit->store_road }}">
                             </div>
                         </div>
 
                         <div class="col-lg-4 col-md-4 col-sm-12">
                             <div class="form-group">
                                 <label for="">จังหวัด</label>
-                                <select id="input_province" name="province" class="form-control custom-select select2bs4" onchange="showAmphoes()">
-                                    <option value="">กรุณาเลือกจังหวัด</option>
+                                <select id="input_province1" class="form-control custom-select select2bs4" onchange="showAmphoes()" disabled>
+                                    <option value="{{ $Edit->province }}">{{ cms::GetProvince($Edit->province) }}</option>
                                 </select>
                             </div>
                         </div>
@@ -123,8 +123,8 @@ use App\Models\CmsHelper as cms;
                         <div class="col-lg-4 col-md-4 col-sm-12">
                             <div class="form-group">
                                 <label for="">อำเภอ</label>
-                                <select id="input_amphoe" name="amphoe" class="form-control custom-select select2bs4" onchange="showDistricts()">
-                                    <option value="">กรุณาเลือกอำเภอ</option>
+                                <select id="input_amphoe1" class="form-control custom-select select2bs4" onchange="showDistricts()"  disabled>
+                                    <option value="{{ $Edit->amphoe }}">{{ cms::GetAmphoe($Edit->amphoe) }}</option>
                                 </select>
                             </div>
                         </div>
@@ -132,8 +132,8 @@ use App\Models\CmsHelper as cms;
                         <div class="col-lg-4 col-md-4 col-sm-12">
                             <div class="form-group">
                                 <label for="">ตำบล</label>
-                                <select id="input_district" name="tumbon" class="form-control custom-select select2bs4" onchange="showZipcode()">
-                                    <option value="">กรุณาเลือกตำบล</option>
+                                <select id="input_district1"  class="form-control custom-select select2bs4" onchange="showZipcode()" disabled>
+                                    <option value="{{ $Edit->tumbon }}">{{ cms::GetTumbon($Edit->tumbon) }}</option>
                                 </select>
                             </div>
                         </div>
@@ -141,23 +141,62 @@ use App\Models\CmsHelper as cms;
                         <div class="col-lg-4 col-md-4 col-sm-12">
                             <div class="form-group">
                                 <label for="">รหัสไปรษณีย์</label>
-                                <input id="input_zipcode" name="zipcode" class="form-control" placeholder="รหัสไปรษณีย์" />
+                                <input id="input_zipcode" class="form-control" value="{{ $Edit->zipcode }}" placeholder="รหัสไปรษณีย์" />
                             </div>
                         </div>
 
                         <div class="col-lg-4 col-md-4 col-sm-12">
                             <div class="form-group">
                                 <label for="">หมายเลขโทรศัพท์</label>
-                                <input name="tel" class="form-control" placeholder="หมายเลขโทรศัพท์" maxlength="10" />
+                                <input name="tel" class="form-control" value="{{ $Edit->tel }}" placeholder="หมายเลขโทรศัพท์" maxlength="10" />
                             </div>
                         </div>
 
                         <div class="col-12">
-                            <div class="form-group">
-                                <label for="">ภาพ</label>
-                                <input type="file" class="form-control" name="image[]" id="" multiple accept=".jpg,.jpeg,.gif,.png">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label for="">ภาพ</label>
+                                        <input type="file" class="form-control" name="image[]" id="" multiple accept=".jpg,.jpeg,.gif,.png">
+                                    </div>
+                                </div>
                             </div>
                         </div>
+
+
+                        <table class="table table-sm table-bordered table-striped">
+                            <tr class="bg-gradient-dark">
+                                <th class="text-center" width="120px">ภาพ</th>
+                                <th>ชื่อไฟล์</th>
+                                <th width="100px">ลบ</th>
+                            </tr>
+
+                            @foreach($Img as $val)
+                            <tr>
+                                <td>
+                                    <a href="{{ asset('uploads/survey/'.$val->img_name) }}" data-fancybox="gallery" data-caption="Optional caption">
+                                        <img src="{{ asset('uploads/survey/'.$val->img_name) }}" class="img-thumbnail" style="width: 100px;height:100px">
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="{{ asset('uploads/survey/'.$val->img_name) }}" data-fancybox="gallery" data-caption="Optional caption">
+                                        {{ $val->img_name }}
+                                    </a>
+                                </td>
+                                <td>
+
+                                    <a href="{{ route('workshop.detail_delete_img',[
+                                        'id'=>$val->id,
+                                        'img_nmae'=>$val->img_name
+                                        ]) }}" class="btn btn-danger">
+                                        <i class="fa fa-trash" aria-hidden="true"></i>
+                                    </a>
+
+
+                                </td>
+                            </tr>
+                            @endforeach
+                        </table>
 
 
                     </div><!-- end row -->
@@ -177,6 +216,8 @@ use App\Models\CmsHelper as cms;
 <!-- <script type="text/javascript" src="{{ asset('plugins/datepicker-thai/js/bootstrap-datepicker.js') }}"></script> -->
 <script src="{{ asset('plugins/datepicker-thai/js/bootstrap-datepicker-custom.js') }}"></script>
 <script src="{{ asset('plugins/datepicker-thai/js/locales/bootstrap-datepicker.th.min.js') }}" charset="UTF-8"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
 
 @endsection
 
@@ -276,19 +317,28 @@ use App\Models\CmsHelper as cms;
 </script>
 
 <script>
-  $('.datepicker').datepicker({
-    format: 'd MM yyyy',
-    language: 'th-th',
-    endDate: '0',
-    todayHighlight: true,
-    daysOfWeekHighlighted: '06',
-    autoclose: true,
-    // enableOnReadonly: true,
-    thaiyear: true
-  }).datepicker("setDate", "0");
+    $('.datepicker').datepicker({
+        format: 'd MM yyyy',
+        language: 'th-th',
+        endDate: '0',
+        todayHighlight: true,
+        daysOfWeekHighlighted: '06',
+        autoclose: true,
+        // enableOnReadonly: true,
+        thaiyear: true
+    }).datepicker();
 </script>
 
-@if($msg = session()->get('Error'))
+@if($msg = session()->get('Success'))
+<script>
+    Swal.fire({
+        icon: 'success',
+        title: '{{ $msg }}',
+        showConfirmButton: false,
+        timer: 1500
+    })
+</script>
+@elseif($msg = session()->get('Error'))
 <script>
     Swal.fire({
         icon: 'error',

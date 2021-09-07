@@ -154,7 +154,6 @@ class CmsHelper
     return $query->org_name;
   }
 
-
   // ชื่อจังหวัด : วิธีใช้ cms::GetProvince(รหัส)
   public static function GetProvince($code)
   {

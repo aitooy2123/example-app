@@ -21,8 +21,9 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Validated;
+use Intervention\Image\ImageManagerStatic as Image;
 
-use Image;
+// use Image;
 use Carbon\Carbon;
 use App\Models\CmsHelper as cms;
 
@@ -380,6 +381,7 @@ class UserController extends Controller
         // File::cleanDirectory($path);
 
         $file = $request->file('file');
+
         $new_image_name = 'User' . auth::user()->id . '.jpg';
         $upload = $file->move(public_path($path), $new_image_name);
 
@@ -393,6 +395,10 @@ class UserController extends Controller
             return response()->json(['status' => 0, 'msg' => 'Something went wrong, try again later']);
         }
     }
+
+
+
+
     public function change_password(Request $request)
     {
         // dd($request->Password, Hash::make($request->Password));
@@ -430,18 +436,177 @@ class UserController extends Controller
     }
     public function workshop_form_insert(Request $request)
     {
+        // dd($request);
+        $insert = new Survey();
+        $insert->date = cms::DateThai2Eng($request->date);
+        $insert->store_name = $request->store_name;
+        $insert->store_no = $request->store_no;
+        $insert->store_moo = $request->store_moo;
+        $insert->store_soi = $request->store_soi;
+        $insert->store_road = $request->store_road;
+        $insert->province = $request->province;
+        $insert->amphoe = $request->amphoe;
+        $insert->tumbon = $request->tumbon;
+        $insert->zipcode = $request->zipcode;
+        $insert->tel = $request->tel;
+        $insert->save();
 
-        
+        if ($request->hasFile('image')) {
+
+            $images = $request->file('image');
+
+            foreach ($images as $image) {
+                $rename = Carbon::now()->year + 543 . '_' . date('mdHis') . '_' . rand(111, 999) . '.' . $image->extension();
+                $path = $image->move(public_path('uploads/survey/'), $rename);
+
+                $width = Image::make($path)->width();
+                $height = Image::make($path)->height();
+                // dd($width,$height);
+
+                if ($width > $height) {
+                    Image::make($path)->resize(1028, null, function ($constraint) {
+                        $constraint->aspectRatio();
+                    })->save(public_path('uploads/survey/' . $rename));
+                } else {
+                    Image::make($path)->resize(null, 720, function ($constraint) {
+                        $constraint->aspectRatio();
+                    })->save(public_path('uploads/survey/' . $rename));
+                }
+
+                $SurveyImg = new SurveyImg();
+                $SurveyImg->img_name = $rename;
+                $SurveyImg->survey_id = $insert->id;
+                $SurveyImg->user_id = auth::user()->id;
+                $SurveyImg->save();
+            }
+        }
+
+        if ($insert->save()) {
+            return redirect()->route('workshop.list')->with('Success', 'บันทึกสำเร็จ');
+        } else {
+            return back()->withInput()->with('Error', 'บันทึกไม่สำเร็จ');
+        }
     }
+    public function workshop_form_edit(Request $request)
+    {
+        $Edit = Survey::find($request->id)->first();
+        $Img = SurveyImg::where('survey_id', $request->id)->get();
 
+        return view('workshop_form_edit', [
+            'Edit' => $Edit,
+            'Img' => $Img
+        ]);
+    }
+    public function workshop_form_update(Request $request)
+    {
+        // dd($request);
+        $insert = Survey::find($request->id);
+        $insert->date = cms::DateThai2Eng($request->date);
+        $insert->store_name = $request->store_name;
+        $insert->store_no = $request->store_no;
+        $insert->store_moo = $request->store_moo;
+        $insert->store_soi = $request->store_soi;
+        $insert->store_road = $request->store_road;
+        // $insert->province = $request->province;
+        // $insert->amphoe = $request->amphoe;
+        // $insert->tumbon = $request->tumbon;
+        // $insert->zipcode = $request->zipcode;
+        $insert->tel = $request->tel;
+
+
+        if ($request->hasFile('image')) {
+
+            $images = $request->file('image');
+
+            foreach ($images as $image) {
+                $rename = Carbon::now()->year + 543 . '_' . date('mdHis') . '_' . rand(111, 999) . '.' . $image->extension();
+                $path = $image->move(public_path('uploads/survey/'), $rename);
+
+                $width = Image::make($path)->width();
+                $height = Image::make($path)->height();
+                // dd($width,$height);
+
+                if ($width > $height) {
+                    Image::make($path)->resize(1028, null, function ($constraint) {
+                        $constraint->aspectRatio();
+                    })->save(public_path('uploads/survey/' . $rename));
+                } else {
+                    Image::make($path)->resize(null, 720, function ($constraint) {
+                        $constraint->aspectRatio();
+                    })->save(public_path('uploads/survey/' . $rename));
+                }
+
+                $SurveyImg = new SurveyImg();
+                $SurveyImg->img_name = $rename;
+                $SurveyImg->survey_id = $request->id;
+                $SurveyImg->user_id = auth::user()->id;
+                $SurveyImg->save();
+            }
+        }
+
+        if ($insert->save()) {
+            return redirect()->route('workshop.list')->with('Success', 'บันทึกสำเร็จ');
+        } else {
+            return back()->withInput()->with('Error', 'บันทึกไม่สำเร็จ');
+        }
+    }
+    public function workshop_form_delete(Request $request)
+    {
+        // dd($request);
+        $img = SurveyImg::where('survey_id', $request->id)->get();
+        foreach ($img as $val) {
+            File::delete('uploads/survey/' . $val->img_name);
+        }
+
+        $delete_img = SurveyImg::where('survey_id', $request->id)->delete();
+        $delete_record = Survey::where('id', $request->id)->delete();
+
+        if ($delete_record) {
+            return back()->with('Success', 'ลบไฟล์สำเร็จ');
+        } else {
+            return back()->withInput()->with('Error', 'ลบไฟล์ไม่สำเร้จ');
+        }
+    }
 
 
 
     public function workshop_list(Request $request)
     {
-        $survey = Survey::all();
-        return view('workshop_list',[
+        $survey = Survey::select(
+            'tbl_survey.*',
+            'tbl_survey_img.*',
+            'tbl_survey_img.id as img_id'
+        )
+            ->join('tbl_survey_img', 'tbl_survey.id', '=', 'tbl_survey_img.survey_id')
+            ->groupBy('tbl_survey.id')
+            ->get();
+
+
+        return view('workshop_list', [
             "survey" => $survey
         ]);
+    }
+
+    public function workshop_detail(Request $request)
+    {
+        $survey = Survey::where('id', $request->id)->first();
+        $img = SurveyImg::where('survey_id', $request->id)->get();
+        return view('workshop_detail', [
+            "survey" => $survey,
+            "img" => $img
+        ]);
+    }
+    public function workshop_detail_delete_img(Request $request)
+    {
+        // dd($request);
+        File::delete('uploads/survey/' . $request->img_name);
+
+        $delete = SurveyImg::where('id', $request->id)->delete();
+
+        if ($delete) {
+            return back()->with('Success', 'ลบไฟล์สำเร็จ');
+        } else {
+            return back()->withInput()->with('Error', 'ลบไฟล์ไม่สำเร้จ');
+        }
     }
 }

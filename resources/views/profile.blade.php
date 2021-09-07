@@ -189,18 +189,18 @@ use Carbon\Carbon;
         withCSRF: ['_token', '{{ csrf_token() }}'],
         onSuccess: function(message, element, status) {
             //  alert(message);
-            location.reload();
+            // location.reload();
 
-            // toastr.success(
-            //     message,
-            //     'Success :', {
-            //         timeOut: 1000,
-            //         fadeOut: 1000,
-            //         onHidden: function() {
-            //             window.location.reload();
-            //         }
-            //     }
-            // );
+            toastr.success(
+                message,
+                'Success :', {
+                    timeOut: 1000,
+                    fadeOut: 1000,
+                    onHidden: function() {
+                        window.location.reload();
+                    }
+                }
+            );
         },
         onError: function(message, element, status) {
             alert(message);
