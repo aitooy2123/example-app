@@ -497,6 +497,7 @@ class UserController extends Controller
         // $insert->amphoe = $request->amphoe;
         // $insert->tumbon = $request->tumbon;
         // $insert->zipcode = $request->zipcode;
+        $insert->summernote = $request->summernote;
         $insert->tel = $request->tel;
 
         if ($request->hasFile('image')) {
