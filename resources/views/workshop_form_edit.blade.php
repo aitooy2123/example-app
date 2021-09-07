@@ -220,6 +220,7 @@ use App\Models\CmsHelper as cms;
 
             </div><!-- /.card-body -->
             <div class="card-footer text-right">
+                <a href="{{ route('workshop.list') }}" class="btn btn-danger" style="width:100px">ย้อนกลับ</a>
                 <button type="submit" class="btn btn-success" style="width:100px">บันทึก</button>
             </div>
             </form>
