@@ -77,10 +77,18 @@ use App\Models\CmsHelper as cms;
 
                     <div class="form-group">
                         <label for="organize">หน่วยงาน</label>
-                        <select name="organize" class="form-control select2bs4 select2-danger" data-dropdown-css-class="select2-danger" style="width: 100%;">
-                            @foreach($Organize as $val)
-                            <option value="{{ $val->id }}">{{ $val->org_name }}</option>
+                        <select name="organize" class="form-control select2bs45 select2-danger" data-dropdown-css-class="select2-danger" style="width: 100%;">
+
+                            @foreach($Organize1 as $val1)
+                            <optgroup label="{{ $val1->org_role }}">
+                                @foreach($Organize2 as $val2)
+                                @if ($val2->org_role === $val1->org_role)
+                                <option value="{{ $val2->id }}">{{ $val2->org_name }}</option>
+                                @endif
+                                @endforeach
+                            </optgroup>
                             @endforeach
+
                         </select>
                     </div>
 

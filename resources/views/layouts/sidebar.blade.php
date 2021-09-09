@@ -54,7 +54,7 @@ use Illuminate\Support\Facades\Auth;
         <li class="nav-item">
           <a href="{{ route('table') }}" class="nav-link {{ active_route('table*') }}">
             <i class="nav-icon fas fa-table"></i>
-            <p>Table</p>
+            <p>CRUD</p>
           </a>
         </li>
 

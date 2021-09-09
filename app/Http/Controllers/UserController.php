@@ -332,7 +332,10 @@ class UserController extends Controller
     public function form_relate()
     {
         $Relate = Relate::all();
-        $Organize = Organize::all();
+
+        $Organize1 = Organize::groupBy('org_role')->get();
+        $Organize2 = Organize::orderByRaw('CAST(org_name AS DECIMAL)')->get();
+    
         $Users = User::all();
 
         foreach ($Users as $val) {
@@ -342,7 +345,8 @@ class UserController extends Controller
 
         return view('form_relate', [
             'Relate' => $Relate,
-            'Organize' => $Organize,
+            'Organize2' => $Organize2,
+            'Organize1' => $Organize1,
             'User' => $User
         ]);
     }
