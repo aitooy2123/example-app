@@ -21,6 +21,7 @@ use App\Models\Organize;
 use App\Models\Survey;
 use App\Models\SurveyImg;
 use App\Models\CmsHelper as cms;
+use App\Models\Line;
 
 use Image;
 use Carbon\Carbon;
@@ -197,7 +198,7 @@ class UserController extends Controller
 
         //Stroage =======================================================================================
         $filename = $rename  . '.' . $request->file->getClientOriginalExtension();
-        $storage_path = $request->file('file')->storeAs('files', $filename); // Storage 
+        $storage_path = $request->file('file')->storeAs('files', $filename); // Storage
         $public_path = $request->file->move(public_path('uploads/files/'), $filename); // Public
 
         //Insert =======================================================================================
@@ -280,7 +281,7 @@ class UserController extends Controller
 
         // Upload Storage & Public  ====================================================================
         $img_name = $rename  . '.' . $request->file->getClientOriginalExtension();
-        $storage_path = $request->file('file')->storeAs('images', $img_name); // Storage 
+        $storage_path = $request->file('file')->storeAs('images', $img_name); // Storage
         $public_path = $request->file->move(public_path($folder_image), $img_name); // Public
 
         // Thumbnail =======================================================================================
@@ -335,7 +336,7 @@ class UserController extends Controller
 
         $Organize1 = Organize::groupBy('org_role')->get();
         $Organize2 = Organize::orderByRaw('CAST(org_name AS DECIMAL)')->get();
-    
+
         $Users = User::all();
 
         foreach ($Users as $val) {
@@ -437,7 +438,7 @@ class UserController extends Controller
     // Work Shop
     // ================================================================================================
 
-    // form 
+    // form
     public function workshop_form(Request $request)
     {
         return view('workshop_form');
@@ -499,7 +500,7 @@ class UserController extends Controller
         $Edit = Survey::where('id', $request->id)->first();
         $Img = SurveyImg::where('survey_id', $request->id)->get();
 
-        if(empty($Edit)){
+        if (empty($Edit)) {
             return back();
         }
 
@@ -588,7 +589,7 @@ class UserController extends Controller
         $survey = Survey::where('id', $request->id)->first();
         $img = SurveyImg::where('survey_id', $request->id)->get();
 
-        if(empty($survey)){
+        if (empty($survey)) {
             return back();
         }
 
@@ -624,8 +625,81 @@ class UserController extends Controller
         Survey::truncate();
         SurveyImg::truncate();
 
-        User::where('avatar','!=',NULL)->update(['avatar'=> NULL]);
+        User::where('avatar', '!=', NULL)->update(['avatar' => NULL]);
 
         return redirect()->back()->with('Truncate', 'ข้อมูล/ไฟล์ ทั้งหมดถูกล้าง');
+    }
+
+    // LINE ---------------------------------------------------------------------------
+    public function line()
+    {
+        $line = Line::all();
+        return view('line', [
+            'line' => $line
+        ]);
+    }
+
+    public function line_insert(Request $request)
+    {
+        // dd($request);
+        $insert = new Line();
+        $insert->title = $request->title;
+        $insert->token = $request->token;
+        $insert->message = $request->message;
+
+        if ($insert->save()) {
+            return back()->with('Success', 'Insert Successfully');
+        } else {
+            return back()->with('Error', 'Insert Error');
+        }
+    }
+
+    public function line_send(Request $request)
+    {
+        // dd($request);
+        // $line_notify_token = env('LINE_TOKEN');
+        $line_notify_token = $request->token;
+        $msg = $request->message;
+        $stickerPackage = "1";
+        $sticker = $request->sticker;
+        $response = "message=" . $msg . "&stickerPackageId=" . $stickerPackage . "&stickerId=" . $sticker;
+        $this->line_notify($line_notify_token, $response);
+
+        return back()->with('Success', 'Insert Successfully');
+    }
+
+
+    public function line_notify($Token, $message)
+    {
+        $lineapi = $Token;
+        // $mms =  trim($message);
+        date_default_timezone_set("Asia/Bangkok");
+        $chOne = curl_init();
+        curl_setopt($chOne, CURLOPT_URL, "https://notify-api.line.me/api/notify");
+        // SSL USE
+        curl_setopt($chOne, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($chOne, CURLOPT_SSL_VERIFYPEER, 0);
+        //POST
+        curl_setopt($chOne, CURLOPT_POST, 1);
+        curl_setopt($chOne, CURLOPT_POSTFIELDS, $message);
+        curl_setopt($chOne, CURLOPT_FOLLOWLOCATION, 1);
+        $headers = array('Content-type: application/x-www-form-urlencoded', 'Authorization: Bearer ' . $lineapi . '',);
+        curl_setopt($chOne, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($chOne, CURLOPT_RETURNTRANSFER, 1);
+        $result = curl_exec($chOne);
+        //Check error
+        if (curl_error($chOne)) {
+            echo 'error:' . curl_error($chOne);
+        } else {
+            $result_ = json_decode($result, true);
+            echo $result_['message'];
+        }
+        curl_close($chOne);
+    }
+
+
+    public function qrcode()
+    {
+        return view('qrcode');
     }
 }

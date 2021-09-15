@@ -28,7 +28,12 @@ Route::get('/clear-cache', function () {
 
 // --------------------------------------------------------------------------------------
 
+// Auth *****
 Route::group(['middleware' => ['auth']], function () {
+
+// DDC SSO *****
+// Route::group(['prefix', 'middleware' => 'keycloak-web'], function () {
+
     Route::get('index', [HomeController::class, 'index'])->name('home');
     Route::get('logout', 'Auth\LoginController@logout')->name('logout');
     Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
@@ -38,7 +43,9 @@ Route::group(['middleware' => ['auth']], function () {
     });
     Route::get('/', function () {
         return view('home2');
+        // return redirect('keycloak/login');
     });
+
     route::get('home2', [UserController::class, 'home2'])->name('home2');
 
     // Table Province (CRUD) =========================================================
@@ -68,7 +75,7 @@ Route::group(['middleware' => ['auth']], function () {
     route::get('form/upload/truncate', [UserController::class, 'form_upload_truncate'])->name('form.upload_truncate');
 
 
-    
+
     // Upload Image =========================================================
     route::get('form/image', [UserController::class, 'form_image'])->name('form.image');
     route::post('form/image/insert', [UserController::class, 'form_image_insert'])->name('form.image_insert');
@@ -102,5 +109,16 @@ Route::group(['middleware' => ['auth']], function () {
     route::get('workshop/detail/delete/img/', [UserController::class, 'workshop_detail_delete_img'])->name('workshop.detail_delete_img');
 
     route::get('truncate', [UserController::class, 'truncate'])->name('truncate');
+
+
+    // ==========================================================================
+    // Line Notify
+    // ==========================================================================
+    route::get('line', [UserController::class, 'line'])->name('line');
+    route::post('line/insert',[UserController::class,'line_insert'])->name('line_insert');
+    route::get('line/notify', [UserController::class, 'line_notify'])->name('line_notify');
+    route::post('line/send', [UserController::class, 'line_send'])->name('line_send');
+
+    route::get('qrcode', [UserController::class, 'qrcode'])->name('qrcode');
 
 });
