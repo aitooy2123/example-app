@@ -80,7 +80,7 @@
           </div>
 
           <div class="from-group my-4 alert alert-warning text-white">
-            <h4 >
+            <h4>
               @if (empty($_GET['web'])) {{ $url = url()->current() }}
               @elseif($_GET['web']=='ddc') {{ $url = 'http:://ddc.moph.go.th' }}
               @elseif($_GET['web']=='google') {{ $url = 'http://www.google.com' }}
