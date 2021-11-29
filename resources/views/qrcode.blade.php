@@ -55,9 +55,9 @@
           }
           ?>
 
-          <div class="form-group d-inline">
+          <div class="form-group">
             <div class="row">
-              <div class="col-6">
+              <div class="col-6  input-group">
                 <a href="?web=example-app" class="btn btn-default">Example-App</a>
                 <a href="?web=ddc" class="btn btn-default">DDC</a>
                 <a href="?web=google" class="btn btn-default">Google</a>
