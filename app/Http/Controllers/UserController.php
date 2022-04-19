@@ -19,11 +19,12 @@ use App\Models\Relate;
 use App\Models\Organize;
 use App\Models\Survey;
 use App\Models\SurveyImg;
-use App\Models\CmsHelper as cms;
 use App\Models\Line;
 
 use Image;
+use File;
 use Carbon\Carbon;
+use App\Models\CmsHelper as cms;
 
 class UserController extends Controller
 {
@@ -672,7 +673,6 @@ class UserController extends Controller
     {
         $lineapi = $Token;
         // $mms =  trim($message);
-        date_default_timezone_set("Asia/Bangkok");
         $chOne = curl_init();
         curl_setopt($chOne, CURLOPT_URL, "https://notify-api.line.me/api/notify");
         // SSL USE
