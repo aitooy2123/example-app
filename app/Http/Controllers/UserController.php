@@ -111,43 +111,37 @@ class UserController extends Controller
             array("y" => 20, "label" => "Saturday")
         );
 
-        // Province + Cache ------------------------------------------------------------------------------------
-        $datas1 = Cache::remember('datas1', '60', function () {
-            return  DB::table('today-cases-line-lists')
-                ->selectRaw('count(txn_date) as totals,province')
-                ->GroupBy('province')->Orderby('totals', 'desc')
-                ->limit(10)
-                ->get();
-        });
+        // Province ------------------------------------------------------------------------------------
+        $datas1 =   DB::table('today-cases-line-lists')
+            ->selectRaw('count(txn_date) as totals,province')
+            ->GroupBy('province')->Orderby('totals', 'desc')
+            ->limit(10)
+            ->get();
         foreach ($datas1 as $data1) {
             $dataPoints1[] = array("y" => $data1->totals, "label" => $data1->province);
         }
 
-        // Gender + Cache ------------------------------------------------------------------------------------
-        $datas2 = Cache::remember('datas2', '60', function () {
-            return  DB::table('today-cases-line-lists')
-                ->selectRaw('count(txn_date) as totals,gender')
-                ->GroupBy('gender')
-                ->get();
-        });
+        // Gender  ------------------------------------------------------------------------------------
+        $datas2 =  DB::table('today-cases-line-lists')
+            ->selectRaw('count(txn_date) as totals,gender')
+            ->GroupBy('gender')
+            ->get();
         foreach ($datas2 as $data2) {
             $dataPoints2[] = array("y" => $data2->totals, "label" => $data2->gender);
         }
 
-        // Risk + Cache ------------------------------------------------------------------------------------
-        $datas3 = Cache::remember('datas3', '60', function () {
-            return  DB::table('today-cases-line-lists')
-                ->selectRaw('count(txn_date) as totals,risk')
-                ->GroupBy('risk')->orderByDesc('totals')
-                ->limit(5)
-                ->get();
-        });
+        // Risk  ------------------------------------------------------------------------------------
+        $datas3 =   DB::table('today-cases-line-lists')
+            ->selectRaw('count(txn_date) as totals,risk')
+            ->GroupBy('risk')->orderByDesc('totals')
+            ->limit(5)
+            ->get();
         foreach ($datas3 as $data3) {
             $dataPoints3[] = array("y" => $data3->totals, "label" => $data3->risk);
         }
 
-        // API + Cache ------------------------------------------------------------------------------------
-        $datas4 = Cache::remember('datas4', '60', function () {
+        // API  ------------------------------------------------------------------------------------
+        $datas4 = Cache::remember('datas4', carbon::now()->addMinutes(10), function () {
             $response = Http::get('https://covid19.ddc.moph.go.th/api/Usage-Stats-Count');
             return  json_decode($response->body());
         });
